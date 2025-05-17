@@ -22,7 +22,9 @@ export async function POST(req: Request) {
     console.log('Received vapi data:', body);
     const { message } = body;
     console.log("message", message)
-    const function_call = message.toolCalls[0].function
+    const toolcal = message.toolCalls[0]
+    const tolcalid = toolcal.id
+    const function_call = toolcal.function
     console.log("function_call", function_call)
     switch (function_call?.name) {
       case 'raiseCase': {
@@ -30,25 +32,37 @@ export async function POST(req: Request) {
         const caseId = await createCase(symptom, duration);
 
         return new NextResponse(
-          JSON.stringify({ result: { message: `Case raised successfully with ID: ${caseId}` } }),
+          JSON.stringify({
+            results: [
+              {
+                toolCallId: tolcalid,
+                result: `Case raised successfully with ID: ${caseId}`
+              }
+            ]
+          }),
           {
             status: 200,
             headers: CORS_HEADERS,
           }
         );
+        
       }
 
-      case 'getUserCases': {
+      case 'getAllUserCases': {
         const cases = await getUserCases("user_2wZbsW6bPlUMdpl88fNHlWphguY");
+        console.log("cases", cases)
         return new NextResponse(
           JSON.stringify({
-            cases: cases
+            results: [
+              {
+                toolCallId: tolcalid,
+                result: cases
+              }
+            ]
           }),
           {
             status: 200,
-            headers: {
-              "Access-Control-Allow-Origin": "*",
-            },
+            headers: CORS_HEADERS,
           }
         );
       }
@@ -91,7 +105,7 @@ async function createCase(symptom: string, duration: string): Promise<string | n
     const { id: caseId } = data;
     console.log("CaseId",caseId)
 
-    try{
+    // try{
       const fastapiRes = await fetch(`https://q1xxcnb9-8000.inc1.devtunnels.ms/predict`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -118,10 +132,10 @@ async function createCase(symptom: string, duration: string): Promise<string | n
       if (!triageRes.ok) console.warn('Triage POST failed');
   
       return caseId;
-    }catch(e:any){
-      console.log("err3",e)
-      return null;
-    }
+    // }catch(e:any){
+    //   console.log("err3",e)
+    //   return null;
+    // }
 
     
   } catch (err) {
