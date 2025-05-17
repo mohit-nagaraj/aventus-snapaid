@@ -26,42 +26,39 @@ export async function POST(request: NextRequest) {
             .select()
             .single();
 
-        const {id} = data
+        const { id } = data
         console.log("case_id", id)
-        try{
-            const fastapiResponse = await fetch(`${process.env.NEXT_PUBLIC_FASTAPI_URL}/predict`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    input_text
-                }),
-            });
-            console.log('FastAPI response status:', fastapiResponse);
-    
-            const fastapiData = await fastapiResponse.json();
-    
-            console.log('FastAPI response:', fastapiData);
-            
-            await fetch(`http://localhost:3000/api/triage`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    labels: fastapiData.label,
-                    summary: fastapiData.summary,
-                    recommended_action: fastapiData.recommended_action,
-                    risk_score: fastapiData.risk_score,
-                    case_id: id
-                }),
-            });
-    
-            if (error) console.error('Webhook error:', error)
-        } catch(e: any){
-            console.log("err",e)
-        }
+
+        const fastapiResponse = await fetch(`${process.env.NEXT_PUBLIC_FASTAPI_URL}/predict`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                input_text
+            }),
+        });
+        console.log('FastAPI response status:', fastapiResponse);
+
+        const fastapiData = await fastapiResponse.json();
+
+        console.log('FastAPI response:', fastapiData);
+
+        await fetch(`http://localhost:3000/api/triage`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                labels: fastapiData.label,
+                summary: fastapiData.summary,
+                recommended_action: fastapiData.recommended_action,
+                risk_score: fastapiData.risk_score,
+                case_id: id
+            }),
+        });
+
+        if (error) console.error('Webhook error:', error)
 
 
         return NextResponse.json({ message: 'successfull', data: data }, { status: 200 });
@@ -75,25 +72,25 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const userId = searchParams.get('userid');
     try {
-        if(userId) {
-        console.log('Fetching cases for userId:', userId);
-        const { data, error } = await supaclient
-            .from('cases')
-            .select(`*,
+        if (userId) {
+            console.log('Fetching cases for userId:', userId);
+            const { data, error } = await supaclient
+                .from('cases')
+                .select(`*,
                 triage_results (
                     id,
                     labels,
                     summary,
                     recommended_action
                 )`)
-            .eq("user_id", userId)
+                .eq("user_id", userId)
 
-        if (error) {
-            console.error('Error fetching cases:', error);
-            return NextResponse.json({ error: 'Failed to fetch cases' }, { status: 500 });
-        }
+            if (error) {
+                console.error('Error fetching cases:', error);
+                return NextResponse.json({ error: 'Failed to fetch cases' }, { status: 500 });
+            }
 
-        return NextResponse.json({data}, { status: 200 });
+            return NextResponse.json({ data }, { status: 200 });
         } else {
             console.log('Fetching all cases');
             const { data, error } = await supaclient
@@ -111,7 +108,7 @@ export async function GET(request: NextRequest) {
                 return NextResponse.json({ error: 'Failed to fetch cases' }, { status: 500 });
             }
 
-            return NextResponse.json({data}, { status: 200 });
+            return NextResponse.json({ data }, { status: 200 });
         }
     } catch (error) {
         console.error('Error processing request:', error);
