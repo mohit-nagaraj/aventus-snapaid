@@ -8,20 +8,26 @@ export async function POST(request: Request) {
     try {
         const body = await request.json();
         console.log('Request Body:', body);
-        const { labels, case_id } = body;
-        if (!case_id || !labels) {
-            return NextResponse.json({ error: 'labels and case_id are required' }, { status: 400 });
+        const { labels,summary,recommended_action, case_id } = body;
+        if (!case_id) {
+            return NextResponse.json({ error: 'case_id are required' }, { status: 400 });
         }
 
         const { error } = await supaclient
             .from('triage_results')
             .insert({
                 case_id,
-                labels
+                labels,
+                summary,
+                recommended_action
             });
 
         if (error) {
             return NextResponse.json({ error: 'Failed to create triage' }, { status: 500 });
+        }
+
+        if (hasEmergencyLabel(labels)) {
+            await sendEmergencyNotifications(case_id);
         }
 
         return NextResponse.json({ message: 'Triage created successfully' });
@@ -37,8 +43,8 @@ export async function PUT(request: Request) {
         const body = await request.json();
         console.log('Request Body:', body);
         const { labels, summary, recommended_action, case_id, risk_score } = body;
-        console.log("risk_score",risk_score);
-        if (!case_id || !labels) {
+
+        if (!case_id) {
             return NextResponse.json({ error: 'labels and case_id are required' }, { status: 400 });
         }
 
@@ -47,7 +53,8 @@ export async function PUT(request: Request) {
             .update({
                 labels,
                 summary,
-                recommended_action
+                recommended_action,
+                risk_score
             })
             .eq('case_id', case_id);
 

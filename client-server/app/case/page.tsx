@@ -64,18 +64,62 @@ function CaseDetailsContent() {
   const [caseData, setCaseData] = useState<CaseData | null>(null);
   const [loading, setLoading] = useState(true);
   const [exporting, setExporting] = useState(false);
+  const [statusUpdating, setStatusUpdating] = useState(false);
+  const [statusChanged, setStatusChanged] = useState(false);
+
+  const validStatuses = ['Opened', 'Triaged', 'Verified', 'Treating', 'Resolved', 'needsinfo'];
 
   useEffect(() => {
     if (!caseid) {
       console.log("not found");
       return;
     }
+    fetchCaseData();
+  }, [caseid]);
+
+  const fetchCaseData = () => {
+    setLoading(true);
     fetch(`/api/case?caseid=${caseid}`)
       .then(res => res.json())
       .then(data => setCaseData(data.data))
       .catch(err => console.error('Failed to fetch case:', err))
       .finally(() => setLoading(false));
-  }, [caseid]);
+  };
+
+  const updateCaseStatus = async (newStatus: string) => {
+    if (!caseData || newStatus === caseData.status) return;
+    
+    setStatusUpdating(true);
+    try {
+      const response = await fetch('/api/case/status', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          case_id: caseData.id,
+          status: newStatus
+        }),
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to update case status');
+      }
+      
+      setCaseData({
+        ...caseData,
+        status: newStatus
+      });
+      
+      setStatusChanged(true);
+      setTimeout(() => setStatusChanged(false), 3000);
+    } catch (error) {
+      console.error('Error updating status:', error);
+      alert('Failed to update case status. Please try again.');
+    } finally {
+      setStatusUpdating(false);
+    }
+  };
 
   const getImageAsDataURL = async (url: string): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -319,10 +363,45 @@ function CaseDetailsContent() {
         </button>
       </div>
       
-      <p className="text-sm text-gray-500 mb-4">
-        Created at: {new Date(caseData.created_at).toLocaleString()} • Status:{' '}
-        <span className="font-medium">{caseData.status}</span>
-      </p>
+      <div className="flex flex-wrap items-center gap-4 mb-4">
+        <p className="text-sm text-gray-500">
+          Created at: {new Date(caseData.created_at).toLocaleString()}
+        </p>
+        
+        <div className="flex items-center">
+          <label htmlFor="status-dropdown" className="mr-2 text-sm font-medium text-gray-700">
+            Status:
+          </label>
+          <div className="relative">
+            <select
+              id="status-dropdown"
+              value={caseData.status}
+              onChange={(e) => updateCaseStatus(e.target.value)}
+              disabled={statusUpdating}
+              className="block w-full py-2 pl-3 pr-10 text-sm border border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 rounded-md"
+            >
+              {validStatuses.map((status) => (
+                <option key={status} value={status}>
+                  {status}
+                </option>
+              ))}
+            </select>
+            {statusUpdating && (
+              <div className="absolute right-0 top-0 bottom-0 flex items-center pr-3 pointer-events-none">
+                <svg className="animate-spin h-4 w-4 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+              </div>
+            )}
+          </div>
+          {statusChanged && (
+            <span className="ml-2 text-sm text-green-600 animate-fade-in">
+              Status updated
+            </span>
+          )}
+        </div>
+      </div>
 
       <div className="border border-gray-200 rounded-lg bg-white shadow-sm mb-6">
         <div className="p-4 border-b border-gray-200 font-semibold text-gray-800">
