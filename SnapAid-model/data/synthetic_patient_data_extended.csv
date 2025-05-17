@@ -1,0 +1,134 @@
+message,triage_priority,symptoms,body_system,context
+"Patient presents with Abdominal Pain, followed by Abdominal Pain.",Delayed,Abdominal Pain,Gastrointestinal,Immunocompromised;Chronic Condition
+"Child reporting Abdominal Pain, also shows signs of Abdominal Pain.",Expectant,Abdominal Pain,Gastrointestinal,Pediatric
+Elderly patient patient with Nausea/Vomiting and Abdominal Pain.,Minor,Nausea/Vomiting;Abdominal Pain,Gastrointestinal,Chronic Condition;Geriatric
+"Adult reporting Diarrhea, also shows signs of Diarrhea.",Minor,Diarrhea,Gastrointestinal,Medication Side Effect;Allergic Reaction
+Child patient with Bleeding and Fever.,Expectant,Bleeding;Fever,Cardiovascular;Respiratory,Pediatric;Infection Suspected
+Pregnant woman patient with Fracture and Fracture.,Immediate,Fracture,Musculoskeletal,Pregnant;Geriatric
+Adult patient with Fever and Chest Pain.,Minor,Fever;Chest Pain,Cardiovascular;Respiratory,Chronic Condition
+"Patient presents with Diarrhea, followed by Abdominal Pain.",Expectant,Diarrhea;Abdominal Pain,Gastrointestinal,Allergic Reaction;Immunocompromised
+"Post-Infection Suspected, Adult has developed Fatigue and Fever.",Minor,Fatigue;Fever,Respiratory;Endocrine,Infection Suspected
+Pregnant woman suffering from Fever after Pregnant.,Delayed,Fever,Respiratory,Pregnant
+"Post-Geriatric, Elderly patient has developed Burn and Abdominal Pain.",Delayed,Burn;Abdominal Pain,Gastrointestinal;Dermatological,Geriatric
+"Post-Immunocompromised, Adult has developed Headache and Fever.",Minor,Headache;Fever,Respiratory;Neurological,Chronic Condition;Immunocompromised
+"Patient presents with Shortness of Breath, followed by Shortness of Breath.",Expectant,Shortness of Breath,Respiratory,Allergic Reaction
+"Elderly patient reporting Shortness of Breath, also shows signs of Shortness of Breath.",Expectant,Shortness of Breath,Respiratory,Geriatric
+"Adult reporting Fever, also shows signs of Fracture.",Expectant,Fever;Fracture,Musculoskeletal;Respiratory,Acute Onset
+Elderly patient patient with Nausea/Vomiting and Nausea/Vomiting.,Expectant,Nausea/Vomiting,Gastrointestinal,Medication Side Effect;Geriatric
+"Elderly patient reporting Abdominal Pain, also shows signs of Wound.",Delayed,Abdominal Pain;Wound,Gastrointestinal;Musculoskeletal,Geriatric
+"Patient presents with Headache, followed by Headache.",Minor,Headache,Neurological,Immunocompromised;Acute Onset
+"Post-Medication Side Effect, Adult has developed Diarrhea and Diarrhea.",Minor,Diarrhea,Gastrointestinal,Medication Side Effect;Immunocompromised
+"Elderly patient reporting Fatigue, also shows signs of Abdominal Pain.",Delayed,Fatigue;Abdominal Pain,Gastrointestinal;Endocrine,Geriatric
+Elderly patient suffering from Dizziness after Geriatric.,Immediate,Dizziness;Chest Pain,Cardiovascular;Neurological,Geriatric
+Elderly patient patient with Nausea/Vomiting and Headache.,Expectant,Nausea/Vomiting;Headache,Gastrointestinal;Neurological,Geriatric;Chronic Condition
+Adult patient with Headache and Headache.,Immediate,Headache,Neurological,Infection Suspected;Medication Side Effect
+Adult suffering from Diarrhea after Allergic Reaction.,Immediate,Diarrhea;Skin Rash,Gastrointestinal;Dermatological,Allergic Reaction
+"Adult reporting Shortness of Breath, also shows signs of Wound.",Delayed,Shortness of Breath;Wound,Musculoskeletal;Respiratory,Medication Side Effect
+Pregnant woman suffering from Cough after Medication Side Effect.,Minor,Cough,Respiratory,Pregnant;Medication Side Effect
+"Patient presents with Fever, followed by Chest Pain.",Expectant,Fever;Chest Pain,Cardiovascular;Respiratory,Geriatric
+Child patient with Headache and Fracture.,Immediate,Headache;Fracture,Musculoskeletal;Neurological,Pediatric;Geriatric
+Adult patient with Fracture and Fracture.,Delayed,Fracture,Musculoskeletal,Acute Onset;Immunocompromised
+"Patient presents with Fatigue, followed by Fatigue.",Minor,Fatigue,Endocrine,Allergic Reaction;Immunocompromised
+Adult patient with Nausea/Vomiting and Dizziness.,Minor,Nausea/Vomiting;Dizziness,Gastrointestinal;Neurological,Acute Onset
+"Patient presents with Fever, followed by Fever.",Delayed,Fever,Respiratory,Post-Surgical
+"Post-Pediatric, Child has developed Fracture and Fracture.",Expectant,Fracture,Musculoskeletal,Immunocompromised;Pediatric
+"Post-Pregnant, Pregnant woman has developed Nausea/Vomiting and Chest Pain.",Expectant,Nausea/Vomiting;Chest Pain,Gastrointestinal;Cardiovascular,Pregnant
+"Post-Infection Suspected, Adult has developed Burn and Burn.",Expectant,Burn,Dermatological,Infection Suspected
+Pregnant woman patient with Diarrhea and Headache.,Expectant,Diarrhea;Headache,Gastrointestinal;Neurological,Immunocompromised;Pregnant
+"Post-Pregnant, Pregnant woman has developed Abdominal Pain and Abdominal Pain.",Immediate,Abdominal Pain,Gastrointestinal,Immunocompromised;Pregnant
+Elderly patient suffering from Abdominal Pain after Geriatric.,Immediate,Abdominal Pain,Gastrointestinal,Geriatric
+"Patient presents with Fatigue, followed by Fatigue.",Immediate,Fatigue,Endocrine,Infection Suspected;Pregnant
+"Adult reporting Dizziness, also shows signs of Dizziness.",Minor,Dizziness,Neurological,Infection Suspected;Chronic Condition
+Elderly patient patient with Fatigue and Dizziness.,Expectant,Fatigue;Dizziness,Endocrine;Neurological,Geriatric
+"Patient presents with Fracture, followed by Fracture.",Delayed,Fracture,Musculoskeletal,Infection Suspected;Acute Onset
+"Patient presents with Cough, followed by Headache.",Immediate,Cough;Headache,Respiratory;Neurological,Immunocompromised;Allergic Reaction
+"Elderly patient reporting Fever, also shows signs of Fever.",Delayed,Fever,Respiratory,Chronic Condition;Geriatric
+"Patient presents with Diarrhea, followed by Dizziness.",Minor,Diarrhea;Dizziness,Gastrointestinal;Neurological,Geriatric;Post-Surgical
+"Patient presents with Abdominal Pain, followed by Abdominal Pain.",Delayed,Abdominal Pain,Gastrointestinal,Pediatric;Acute Onset
+"Patient presents with Diarrhea, followed by Shortness of Breath.",Minor,Diarrhea;Shortness of Breath,Gastrointestinal;Respiratory,Allergic Reaction
+"Post-Pediatric, Child has developed Cough and Cough.",Minor,Cough,Respiratory,Pediatric;Immunocompromised
+"Patient presents with Fever, followed by Fever.",Delayed,Fever,Respiratory,Geriatric;Pregnant
+"Post-Infection Suspected, Adult has developed Fatigue and Fatigue.",Minor,Fatigue,Endocrine,Infection Suspected
+Adult patient with Fatigue and Shortness of Breath.,Delayed,Fatigue;Shortness of Breath,Respiratory;Endocrine,Post-Surgical
+"Post-Allergic Reaction, Adult has developed Chest Pain and Chest Pain.",Delayed,Chest Pain,Cardiovascular,Allergic Reaction
+"Adult reporting Burn, also shows signs of Dizziness.",Minor,Burn;Dizziness,Neurological;Dermatological,Acute Onset
+"Patient presents with Cough, followed by Cough.",Delayed,Cough,Respiratory,Allergic Reaction
+"Adult reporting Skin Rash, also shows signs of Nausea/Vomiting.",Expectant,Skin Rash;Nausea/Vomiting,Gastrointestinal;Dermatological,Chronic Condition
+Pregnant woman suffering from Burn after Pregnant.,Expectant,Burn,Dermatological,Pregnant;Pediatric
+"Adult reporting Fever, also shows signs of Fever.",Minor,Fever,Respiratory,Immunocompromised
+Elderly patient suffering from Chest Pain after Immunocompromised.,Immediate,Chest Pain;Fever,Cardiovascular;Respiratory,Immunocompromised;Geriatric
+"Post-Post-Surgical, Adult has developed Burn and Headache.",Expectant,Burn;Headache,Neurological;Dermatological,Post-Surgical
+"Pregnant woman reporting Chest Pain, also shows signs of Fever.",Delayed,Chest Pain;Fever,Cardiovascular;Respiratory,Pregnant;Acute Onset
+"Post-Pregnant, Pregnant woman has developed Wound and Wound.",Expectant,Wound,Musculoskeletal,Pregnant;Chronic Condition
+"Adult reporting Fatigue, also shows signs of Fatigue.",Minor,Fatigue,Endocrine,Acute Onset
+"Adult reporting Skin Rash, also shows signs of Fatigue.",Immediate,Skin Rash;Fatigue,Endocrine;Dermatological,Immunocompromised
+"Patient presents with Diarrhea, followed by Fatigue.",Minor,Diarrhea;Fatigue,Gastrointestinal;Endocrine,Pregnant;Allergic Reaction
+"Post-Infection Suspected, Adult has developed Fatigue and Diarrhea.",Immediate,Fatigue;Diarrhea,Gastrointestinal;Endocrine,Infection Suspected
+"Patient presents with Fracture, followed by Fracture.",Immediate,Fracture,Musculoskeletal,Medication Side Effect
+"Post-Infection Suspected, Adult has developed Shortness of Breath and Fatigue.",Minor,Shortness of Breath;Fatigue,Respiratory;Endocrine,Infection Suspected
+Elderly patient suffering from Bleeding after Geriatric.,Minor,Bleeding;Burn,Cardiovascular;Dermatological,Infection Suspected;Geriatric
+"Patient presents with Cough, followed by Fever.",Expectant,Cough;Fever,Respiratory,Chronic Condition;Medication Side Effect
+Adult patient with Headache and Headache.,Expectant,Headache,Neurological,Acute Onset
+"Patient presents with Abdominal Pain, followed by Fatigue.",Delayed,Abdominal Pain;Fatigue,Gastrointestinal;Endocrine,Infection Suspected
+Child suffering from Nausea/Vomiting after Pediatric.,Expectant,Nausea/Vomiting;Skin Rash,Gastrointestinal;Dermatological,Pediatric;Geriatric
+"Patient presents with Fever, followed by Fever.",Delayed,Fever,Respiratory,Allergic Reaction;Pediatric
+Adult suffering from Fever after Acute Onset.,Minor,Fever,Respiratory,Post-Surgical;Acute Onset
+Adult patient with Bleeding and Fracture.,Minor,Bleeding;Fracture,Cardiovascular;Musculoskeletal,Infection Suspected;Medication Side Effect
+"Patient presents with Dizziness, followed by Shortness of Breath.",Immediate,Dizziness;Shortness of Breath,Respiratory;Neurological,Pediatric;Immunocompromised
+"Patient presents with Headache, followed by Fever.",Delayed,Headache;Fever,Respiratory;Neurological,Acute Onset
+"Pregnant woman reporting Chest Pain, also shows signs of Bleeding.",Immediate,Chest Pain;Bleeding,Cardiovascular,Medication Side Effect;Pregnant
+"Post-Geriatric, Elderly patient has developed Fatigue and Fatigue.",Immediate,Fatigue,Endocrine,Geriatric
+"Post-Immunocompromised, Adult has developed Shortness of Breath and Burn.",Immediate,Shortness of Breath;Burn,Respiratory;Dermatological,Post-Surgical;Immunocompromised
+Elderly patient patient with Diarrhea and Diarrhea.,Minor,Diarrhea,Gastrointestinal,Geriatric
+"Adult reporting Chest Pain, also shows signs of Chest Pain.",Minor,Chest Pain,Cardiovascular,Allergic Reaction;Immunocompromised
+Adult patient with Burn and Chest Pain.,Expectant,Burn;Chest Pain,Cardiovascular;Dermatological,Infection Suspected
+"Post-Allergic Reaction, Adult has developed Burn and Burn.",Minor,Burn,Dermatological,Allergic Reaction
+"Post-Chronic Condition, Adult has developed Dizziness and Dizziness.",Minor,Dizziness,Neurological,Chronic Condition
+"Patient presents with Wound, followed by Shortness of Breath.",Immediate,Wound;Shortness of Breath,Musculoskeletal;Respiratory,Chronic Condition
+Adult patient with Fatigue and Bleeding.,Delayed,Fatigue;Bleeding,Cardiovascular;Endocrine,Infection Suspected;Immunocompromised
+"Patient presents with Bleeding, followed by Bleeding.",Immediate,Bleeding,Cardiovascular,Infection Suspected
+Adult suffering from Dizziness after Post-Surgical.,Expectant,Dizziness,Neurological,Post-Surgical;Chronic Condition
+"Patient presents with Nausea/Vomiting, followed by Burn.",Delayed,Nausea/Vomiting;Burn,Gastrointestinal;Dermatological,Immunocompromised
+"Patient presents with Shortness of Breath, followed by Chest Pain.",Expectant,Shortness of Breath;Chest Pain,Cardiovascular;Respiratory,Acute Onset
+"Patient presents with Burn, followed by Abdominal Pain.",Delayed,Burn;Abdominal Pain,Gastrointestinal;Dermatological,Pregnant;Geriatric
+"Post-Post-Surgical, Adult has developed Fever and Nausea/Vomiting.",Minor,Fever;Nausea/Vomiting,Gastrointestinal;Respiratory,Post-Surgical
+Adult patient with Dizziness and Fracture.,Delayed,Dizziness;Fracture,Musculoskeletal;Neurological,Medication Side Effect
+"Patient presents with Fracture, followed by Fracture.",Immediate,Fracture,Musculoskeletal,Infection Suspected;Geriatric
+"Post-Geriatric, Elderly patient has developed Shortness of Breath and Shortness of Breath.",Minor,Shortness of Breath,Respiratory,Geriatric;Infection Suspected
+"Post-Chronic Condition, Adult has developed Fracture and Fracture.",Minor,Fracture,Musculoskeletal,Chronic Condition
+Adult patient with Chest Pain and Chest Pain.,Immediate,Chest Pain,Cardiovascular,Infection Suspected;Acute Onset
+Child suffering from Headache after Medication Side Effect.,Delayed,Headache,Neurological,Pediatric;Medication Side Effect
+Pregnant woman suffering from Fracture after Infection Suspected.,Expectant,Fracture,Musculoskeletal,Infection Suspected;Pregnant
+"Elderly patient with severe chest pain and shortness of breath.",Immediate,"Chest Pain;Shortness of Breath","Cardiovascular;Respiratory","Geriatric;Chronic Condition"
+"Child with skin rash and fever after medication.",Delayed,"Skin Rash;Fever",Dermatological,"Pediatric;Medication Side Effect"
+"Adult with minor laceration on arm after fall.",Minor,"Wound",Musculoskeletal,"Acute Onset"
+"Unconscious patient with severe bleeding from head injury.",Immediate,"Bleeding;Headache","Neurological;Cardiovascular","Acute Onset"
+"Senior reporting dizziness and fatigue post-surgery.",Delayed,"Dizziness;Fatigue",Neurological,"Geriatric;Post-Surgical"
+"Adult with persistent cough and fever after travel.",Expectant,"Cough;Fever",Respiratory,"Infection Suspected"
+"Child with abdominal pain and vomiting after eating.",Minor,"Abdominal Pain;Nausea/Vomiting",Gastrointestinal,"Pediatric;Medication Side Effect"
+"Adult with chest pain and shortness of breath after exercise.",Immediate,"Chest Pain;Shortness of Breath","Cardiovascular;Respiratory","Acute Onset"
+"Senior with confusion and headache after fall.",Delayed,"Confusion;Headache",Neurological,"Geriatric;Acute Onset"
+"Adult with severe abdominal pain and fever.",Immediate,"Abdominal Pain;Fever",Gastrointestinal,"Infection Suspected"
+"Child with minor burn on hand after cooking.",Minor,"Burn",Dermatological,"Pediatric;Acute Onset"
+"Adult with persistent headache and nausea after travel.",Delayed,"Headache;Nausea/Vomiting",Neurological,"Infection Suspected"
+"Senior with chest pain and dizziness after exercise.",Immediate,"Chest Pain;Dizziness","Cardiovascular;Neurological","Geriatric;Acute Onset"
+"Child with fever and rash after vaccination.",Expectant,"Fever;Skin Rash",Respiratory,"Pediatric;Medication Side Effect"                                   
+"Adult with severe fatigue and fever after travel.",Immediate,"Fatigue;Fever",Endocrine,"Infection Suspected"
+"Senior with shortness of breath and chest pain after exercise.",Immediate,"Shortness of Breath;Chest Pain","Respiratory;Cardiovascular","Geriatric;Acute Onset"
+"Child with abdominal pain and diarrhea after eating.",Minor,"Abdominal Pain;Diarrhea",Gastrointestinal,"Pediatric;Medication Side Effect"
+"Adult with severe headache and nausea after travel.",Immediate,"Headache;Nausea/Vomiting",Neurological,"Infection Suspected"
+"Senior with confusion and dizziness after fall.",Delayed,"Confusion;Dizziness",Neurological,"Geriatric;Acute Onset"
+"Adult with persistent cough and fever after travel.",Expectant,"Cough;Fever",Respiratory,"Infection Suspected"
+"Child with minor laceration on arm after fall.",Minor,"Wound",Musculoskeletal,"Pediatric;Acute Onset"
+"Adult with severe abdominal pain and fever.",Immediate,"Abdominal Pain;Fever",Gastrointestinal,"Infection Suspected"   
+"Senior with chest pain and shortness of breath after exercise.",Immediate,"Chest Pain;Shortness of Breath","Cardiovascular;Respiratory","Geriatric;Acute Onset"
+"Child with fever and rash after vaccination.",Expectant,"Fever;Skin Rash",Respiratory,"Pediatric;Medication Side Effect"
+"Adult with severe fatigue and fever after travel.",Immediate,"Fatigue;Fever",Endocrine,"Infection Suspected"
+"Senior with shortness of breath and chest pain after exercise.",Immediate,"Shortness of Breath;Chest Pain","Respiratory;Cardiovascular","Geriatric;Acute Onset"
+"Child with abdominal pain and diarrhea after eating.",Minor,"Abdominal Pain;Diarrhea",Gastrointestinal,"Pediatric;Medication Side Effect"
+"Adult with severe headache and nausea after travel.",Immediate,"Headache;Nausea/Vomiting",Neurological,"Infection Suspected"
+"Senior with confusion and dizziness after fall.",Delayed,"Confusion;Dizziness",Neurological,"Geriatric;Acute Onset"
+"Adult with persistent cough and fever after travel.",Expectant,"Cough;Fever",Respiratory,"Infection Suspected"
+"Child with minor laceration on arm after fall.",Minor,"Wound",Musculoskeletal,"Pediatric;Acute Onset"
+"Adult with severe abdominal pain and fever.",Immediate,"Abdominal Pain;Fever",Gastrointestinal,"Infection Suspected"
+"Senior with chest pain and shortness of breath after exercise.",Immediate,"Chest Pain;Shortness of Breath","Cardiovascular;Respiratory","Geriatric;Acute Onset"

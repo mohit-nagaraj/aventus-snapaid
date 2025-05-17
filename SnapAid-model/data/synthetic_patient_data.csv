@@ -1,0 +1,6 @@
+message,triage_priority,symptoms,body_system,context
+"Elderly patient with severe chest pain and shortness of breath.",Immediate,"Chest Pain;Shortness of Breath","Cardiovascular;Respiratory","Geriatric;Chronic Condition"
+"Child with skin rash and fever after medication.",Delayed,"Skin Rash;Fever",Dermatological,"Pediatric;Medication Side Effect"
+"Adult with minor laceration on arm after fall.",Minor,"Wound",Musculoskeletal,"Acute Onset"
+"Unconscious patient with severe bleeding from head injury.",Immediate,"Bleeding;Headache","Neurological;Cardiovascular","Acute Onset"
+"Senior reporting dizziness and fatigue post-surgery.",Delayed,"Dizziness;Fatigue",Neurological,"Geriatric;Post-Surgical"
