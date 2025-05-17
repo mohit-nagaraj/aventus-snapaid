@@ -60,7 +60,13 @@ export async function GET(request: NextRequest) {
         console.log('Fetching cases for userId:', userId);
         const { data, error } = await supaclient
             .from('cases')
-            .select('*')
+            .select(`*,
+                triage_results (
+                    id,
+                    labels,
+                    summary,
+                    recommended_action
+                )`)
             .eq("user_id", userId)
 
         if (error) {
@@ -73,7 +79,13 @@ export async function GET(request: NextRequest) {
             console.log('Fetching all cases');
             const { data, error } = await supaclient
                 .from('cases')
-                .select('*')
+                .select(`*,
+                    triage_results (
+                        id,
+                        labels,
+                        summary,
+                        recommended_action
+                    )`)
 
             if (error) {
                 console.error('Error fetching cases:', error);

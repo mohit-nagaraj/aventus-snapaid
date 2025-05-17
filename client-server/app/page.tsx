@@ -20,6 +20,9 @@ const { userId } = await auth()
         <Link href={`/create`} className="text-blue-500 hover:underline">
           Create a new concern
         </Link>
+        <Link href={`/chat`} className="text-blue-500 hover:underline">
+          Have a chat?
+        </Link>
 
       </main>
       <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">

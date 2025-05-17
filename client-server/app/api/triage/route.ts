@@ -1,23 +1,25 @@
 import { supaclient } from '@/lib/supabase';
+import { hasEmergencyLabel } from '@/utils/labelcheck';
+import { sendEmergencyNotifications } from '@/utils/sendmail';
 import { NextResponse } from 'next/server';
 
 // create when case is created
 export async function POST(request: Request) {
     try {
-        const body = await request.json(); 
+        const body = await request.json();
         console.log('Request Body:', body);
-        const {labels, case_id} = body;
+        const { labels, case_id } = body;
         if (!case_id || !labels) {
             return NextResponse.json({ error: 'labels and case_id are required' }, { status: 400 });
         }
-        
+
         const { error } = await supaclient
             .from('triage_results')
-            .insert({ 
+            .insert({
                 case_id,
                 labels
-             });
-        
+            });
+
         if (error) {
             return NextResponse.json({ error: 'Failed to create triage' }, { status: 500 });
         }
@@ -32,24 +34,28 @@ export async function POST(request: Request) {
 // update when chat coversation is updated
 export async function PUT(request: Request) {
     try {
-        const body = await request.json(); 
+        const body = await request.json();
         console.log('Request Body:', body);
-        const {labels, summary, recommended_action, case_id} = body;
+        const { labels, summary, recommended_action, case_id, risk_score } = body;
         if (!case_id || !labels) {
             return NextResponse.json({ error: 'labels and case_id are required' }, { status: 400 });
         }
-        
+
         const { error } = await supaclient
             .from('triage_results')
-            .update({ 
+            .update({
                 labels,
                 summary,
                 recommended_action
-             })
+            })
             .eq('case_id', case_id);
-        
+
         if (error) {
             return NextResponse.json({ error: 'Failed to update triage' }, { status: 500 });
+        }
+
+        if (hasEmergencyLabel(labels)) {
+            await sendEmergencyNotifications(case_id);
         }
 
         return NextResponse.json({ message: 'Triage updated successfully' });

@@ -21,6 +21,14 @@ export interface Case {
   created_at: Date;
   updated_at: Date;
   input_text: string;
+  input_image: string | null;
+  input_voice: string | null;
+  conversation_history?: Message[];
+}
+
+export interface Message {
+  text: string;
+  user: string;
 }
 
 declare global {

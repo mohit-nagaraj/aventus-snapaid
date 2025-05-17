@@ -13,7 +13,15 @@ export async function GET(request: NextRequest) {
         console.log('Fetching cases for caseId:', caseId);
         const { data, error } = await supaclient
             .from('cases')
-            .select('*')
+            .select(`
+                *,
+                triage_results (
+                    id,
+                    labels,
+                    summary,
+                    recommended_action
+                )
+            `)
             .eq("id", caseId)
             .single();
 
