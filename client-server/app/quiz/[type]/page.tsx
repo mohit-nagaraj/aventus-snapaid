@@ -6,8 +6,9 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
 import { ArrowLeft, ArrowRight } from "lucide-react"
+import { Spinner } from "@/components/spinner"
+import ReactMarkdown from "react-markdown"
 
-// Quiz data for each type
 const quizData = {
   skin: {
     title: "Skin Health Assessment",
@@ -111,72 +112,138 @@ const quizData = {
   },
 }
 
-export default function QuizPage({ params }: { params: { type: string } }) {
+type QuizParams = {
+  params: {
+    type: string
+  }
+}
+
+export default function QuizPage({ params }: QuizParams) {
   const router = useRouter()
   const [currentQuestion, setCurrentQuestion] = useState(0)
   const [selectedOption, setSelectedOption] = useState<string | null>(null)
   const [answers, setAnswers] = useState<string[]>([])
   const [quizComplete, setQuizComplete] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submissionResult, setSubmissionResult] = useState<any>(null)
+  const [submissionError, setSubmissionError] = useState<string | null>(null)
 
   const quizType = params.type
   const quiz = quizData[quizType as keyof typeof quizData]
 
-  // Redirect if invalid quiz type
   useEffect(() => {
-    if (!quiz) {
-      router.push("/")
-    }
+    if (!quiz) router.push("/")
   }, [quiz, router])
 
-  if (!quiz) {
-    return null
-  }
+  useEffect(() => {
+    if (answers[currentQuestion]) {
+      setSelectedOption(answers[currentQuestion])
+    } else {
+      setSelectedOption(null)
+    }
+  }, [currentQuestion, answers])
 
   const handleOptionSelect = (option: string) => {
     setSelectedOption(option)
   }
 
   const handleContinue = () => {
-    if (selectedOption) {
-      const newAnswers = [...answers]
-      newAnswers[currentQuestion] = selectedOption
+    if (!selectedOption) return
+    const updatedAnswers = [...answers]
+    updatedAnswers[currentQuestion] = selectedOption
+    setAnswers(updatedAnswers)
 
-      setAnswers(newAnswers)
-
-      if (currentQuestion < quiz.questions.length - 1) {
-        setCurrentQuestion(currentQuestion + 1)
-        setSelectedOption(null)
-      } else {
-        setQuizComplete(true)
-      }
+    if (currentQuestion < quiz.questions.length - 1) {
+      setCurrentQuestion(currentQuestion + 1)
+    } else {
+      setQuizComplete(true)
+      submitQuizResults(updatedAnswers)
     }
   }
 
   const handleBack = () => {
-    if (currentQuestion > 0) {
-      setCurrentQuestion(currentQuestion - 1)
-      setSelectedOption(answers[currentQuestion - 1] || null)
-    } else {
+    if (currentQuestion === 0) {
       router.push("/")
+    } else {
+      setCurrentQuestion(currentQuestion - 1)
+    }
+  }
+
+  const submitQuizResults = async (finalAnswers: string[]) => {
+    setIsSubmitting(true)
+    setSubmissionError(null)
+
+    try {
+      const formattedResponses = quiz.questions.map((q, i) => ({
+        question_id: q.id,
+        question_text: q.question,
+        answer: finalAnswers[i],
+      }))
+
+      const res = await fetch("/api/quiz", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          quizType: quizType,
+          responses: formattedResponses,
+          metadata: {
+            quizTitle: quiz.title,
+            completedAt: new Date().toISOString(),
+          },
+        }),
+      })
+
+      if (!res.ok) {
+        const err = await res.json()
+        throw new Error(err.error || "Submission failed")
+      }
+
+      const result = await res.json()
+      console.log(result)
+      setSubmissionResult(result)
+    } catch (err) {
+      setSubmissionError(err instanceof Error ? err.message : "Unknown error")
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
   const progress = ((currentQuestion + 1) / quiz.questions.length) * 100
 
+  if (!quiz) return null
+
   if (quizComplete) {
     return (
       <div className="container mx-auto py-12 px-4 max-w-2xl">
-        <Card className="w-full">
+        <Card>
           <CardHeader>
             <CardTitle className="text-2xl text-center">Quiz Complete!</CardTitle>
           </CardHeader>
           <CardContent className="text-center">
-            <p className="mb-6">Thank you for completing the {quiz.title}.</p>
-            <p className="mb-6">
-              Based on your responses, we would prepare personalized recommendations for your health needs.
-            </p>
+            {isSubmitting ? (
+              <div className="flex flex-col items-center py-8">
+                <Spinner className="mb-4" />
+                <p>Submitting your responses...</p>
+              </div>
+            ) : submissionError ? (
+              <div className="text-red-500 py-6">
+                <p>Error: {submissionError}</p>
+                <Button onClick={() => submitQuizResults(answers)} className="mt-4">Try Again</Button>
+              </div>
+            ) : submissionResult ? (
+              <div className="space-y-6 py-6 text-left">
+                <p className="text-center font-semibold text-purple-600">Thank you for completing the {quiz.title}.</p>
+                <div className="bg-purple-100/10 p-6 rounded-lg">
+                  <div className="space-y-4">
+                    <ReactMarkdown>{submissionResult}</ReactMarkdown>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <p className="py-6">Thank you for completing the quiz.</p>
+            )}
           </CardContent>
-          <CardFooter className="flex justify-center pb-6">
+          <CardFooter className="flex justify-center">
             <Button onClick={() => router.push("/")}>Return to Quizzes</Button>
           </CardFooter>
         </Card>
@@ -189,8 +256,8 @@ export default function QuizPage({ params }: { params: { type: string } }) {
   return (
     <div className="container mx-auto py-12 px-4 max-w-2xl">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-center mb-2">{quiz.title}</h1>
-        <div className="flex items-center gap-2 mb-2">
+        <h1 className="text-2xl font-bold text-center">{quiz.title}</h1>
+        <div className="flex items-center gap-2 mt-2">
           <span className="text-sm text-gray-500">
             Question {currentQuestion + 1} of {quiz.questions.length}
           </span>
@@ -198,15 +265,15 @@ export default function QuizPage({ params }: { params: { type: string } }) {
         </div>
       </div>
 
-      <Card className="w-full">
+      <Card>
         <CardHeader>
           <CardTitle className="text-xl">{question.question}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
-            {question.options.map((option, index) => (
+            {question.options.map((option, i) => (
               <div
-                key={index}
+                key={i}
                 className={`p-4 border rounded-lg cursor-pointer transition-colors ${
                   selectedOption === option ? "border-primary bg-primary/10" : "border-gray-200 hover:border-primary/50"
                 }`}
@@ -219,12 +286,10 @@ export default function QuizPage({ params }: { params: { type: string } }) {
         </CardContent>
         <CardFooter className="flex justify-between">
           <Button variant="outline" onClick={handleBack} className="flex items-center gap-2">
-            <ArrowLeft className="h-4 w-4" />
-            Back
+            <ArrowLeft className="h-4 w-4" /> Back
           </Button>
           <Button onClick={handleContinue} disabled={!selectedOption} className="flex items-center gap-2">
-            Continue
-            <ArrowRight className="h-4 w-4" />
+            Continue <ArrowRight className="h-4 w-4" />
           </Button>
         </CardFooter>
       </Card>
