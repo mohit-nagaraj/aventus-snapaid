@@ -15,7 +15,7 @@ export async function setRole(formData: FormData) {
     const res = await client.users.updateUserMetadata(formData.get('id') as string, {
       publicMetadata: { role: formData.get('role') },
     })
-    console.log('res', res)
+    console.log('res2', res)
     return { message: res.publicMetadata }
   } catch (err) {
     return { message: err }

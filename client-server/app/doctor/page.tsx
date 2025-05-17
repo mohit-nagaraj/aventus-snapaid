@@ -34,14 +34,14 @@ export default async function AdminDashboard(params: {
               }
             </div>
 
-            <div>{user.publicMetadata.role as string}</div>
-
+            {/* @ts-expect-error: Action forms do not have a defined type in this context */}
             <form action={setRole}>
               <input type="hidden" value={user.id} name="id" />
               <input type="hidden" value="doctor" name="role" />
               <button type="submit">Make doctor</button>
             </form>
 
+            {/* @ts-expect-error: Action forms do not have a defined type in this context */}
             <form action={removeRole}>
               <input type="hidden" value={user.id} name="id" />
               <button type="submit">Remove Role</button>

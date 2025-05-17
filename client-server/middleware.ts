@@ -1,10 +1,10 @@
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'
 import { NextResponse } from 'next/server'
 
-const isAdminRoute = createRouteMatcher(['/doctor(.*)'])
+const isAdminRoute = createRouteMatcher(['/doctor(.*)', '/all(.*)'])
 
 export default clerkMiddleware(async (auth, req) => {
-  // Protect all routes starting with `/doctor`
+  // Protect all routes starting with `/doctor` and `/all`
   if (isAdminRoute(req) && (await auth()).sessionClaims?.metadata?.role !== 'doctor') {
     const url = new URL('/', req.url)
     return NextResponse.redirect(url)
