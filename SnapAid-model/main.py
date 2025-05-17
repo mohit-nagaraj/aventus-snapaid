@@ -1,8 +1,9 @@
-from fastapi import FastAPI,Request, UploadFile, File, Form
+from fastapi import FastAPI
 from PIL import Image
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 import google.generativeai as genai
+from typing import Optional
 import os
 from dotenv import load_dotenv
 import json
@@ -10,6 +11,7 @@ from pydantic import BaseModel
 import re
 import requests
 from io import BytesIO
+from voice import describe_audio_clip_from_url
 
 load_dotenv()
 # Configure Gemini
@@ -28,7 +30,8 @@ app.add_middleware(
 
 class PredictionInput(BaseModel):
     input_text: str
-    input_image: str = None
+    input_image: Optional[str] = None
+    input_voice: Optional[str] = None
 
 @app.get("/")
 def read_root():
@@ -38,9 +41,22 @@ def read_root():
 async def analyze_message(msg: PredictionInput):
     # body = await msg.json()  # Await since it's an async request
     # input_text = body.get("input_text") 
+    print("Received message:", msg)
     input_text =msg.input_text
-    input_image = msg.input_image
     print("input text:",input_text)
+    input_image = msg.input_image
+    input_voice = msg.input_voice
+    
+    transcription = ""
+    if input_voice:
+        transcription = describe_audio_clip_from_url(input_voice)
+        print("Transcription from voice:", transcription)
+        print("Transcription:", transcription)
+
+
+    full_message = transcription + "\n" + input_text if transcription else input_text
+    print("Full message:", full_message)
+
     prompt = """
         You are a medical triage assistant. Analyze the following patient message and return:
 
@@ -55,6 +71,8 @@ async def analyze_message(msg: PredictionInput):
 
         Return the result as just a valid JSON without markdown.
         All labels are to be in a format of string and sent inside an array field named label. 
+        if there are multiple labels, separate them with commas.
+        If the patient is fine, do not return any label.
         If it is an extreme condition that requires immediate attention, please label it as "Emergency" and provide a risk score of 10.
         Respond in this JSON format:
         example:
@@ -66,7 +84,7 @@ async def analyze_message(msg: PredictionInput):
         }
 
         Message:
-        """+ input_text 
+        """+ input_text + full_message 
     # print(prompt)/
     try:
         # If image is provided, read and convert to Gemini-compatible blob
@@ -77,6 +95,7 @@ async def analyze_message(msg: PredictionInput):
             image = Image.open(BytesIO(response.content))
             print(image)
             response = model.generate_content([image, prompt])
+
         else:
             response = model.generate_content(prompt)
 
