@@ -1,16 +1,13 @@
+// app/layout.tsx
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import {
-  ClerkProvider,
-  SignInButton,
-  SignUpButton,
-  SignedIn,
-  SignedOut,
-  UserButton,
-} from '@clerk/nextjs'
+import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
 import { shadesOfPurple } from "@clerk/themes";
 import { Toaster } from "react-hot-toast";
+import { AuthButtons } from "./components/AuthButton";
+import { HeartPulse } from "lucide-react";
+import { clerkAppearance } from "./clerk-theme";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,7 +21,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "SnapAid",
-  description: "Ai triage for patients",
+  description: "AI triage for patients",
 };
 
 export default function RootLayout({
@@ -33,28 +30,27 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider 
-    appearance={{
-      baseTheme: shadesOfPurple,
-    }}
+    <ClerkProvider
+      appearance={{
+        baseTheme: shadesOfPurple,
+        ...clerkAppearance,
+      }}
     >
-
       <html lang="en">
         <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+          className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gradient-to-b from-purple-50 to-white min-h-screen`}
         >
           <Toaster position="bottom-center" />
-          <header className="flex justify-end items-center p-4 gap-4 h-16">
-            <SignedOut>
-              <SignInButton />
-              <SignUpButton />
-            </SignedOut>
-            <SignedIn>
-              <UserButton />
-            </SignedIn>
+          <header className="sticky top-0 z-50 w-full border-b border-purple-100 bg-white/80 backdrop-blur-md">
+            <div className="container flex h-16 items-center justify-between px-4 mx-auto">
+              <div className="flex items-center gap-2 w-full">
+                <HeartPulse className="h-6 w-6 text-purple-600" />
+                <span className="font-bold text-purple-900">SnapAid</span>
+              </div>
+              <AuthButtons />
+            </div>
           </header>
-
-          {children}
+          <main className="flex-1">{children}</main>
         </body>
       </html>
     </ClerkProvider>
