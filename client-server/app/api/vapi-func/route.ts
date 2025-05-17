@@ -30,7 +30,7 @@ export async function POST(req: Request) {
         const caseId = await createCase(symptom, duration);
 
         return new NextResponse(
-          JSON.stringify({ result: { message: `Case raised successfully with ID: ${caseId}` } }),
+          JSON.stringify(caseId),
           {
             status: 200,
             headers: CORS_HEADERS,
