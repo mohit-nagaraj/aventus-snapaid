@@ -6,7 +6,7 @@ import "./globals.css";
 import { shadesOfPurple } from "@clerk/themes";
 import { Toaster } from "react-hot-toast";
 import { AuthButtons } from "./components/AuthButton";
-import { HeartPulse } from "lucide-react";
+import { HeartPulse, MapPin } from "lucide-react";
 import { clerkAppearance } from "./clerk-theme";
 import BackButton from "./components/BackButton";
 
@@ -49,7 +49,12 @@ export default function RootLayout({
                 <HeartPulse className="h-6 w-6 text-purple-600" />
                 <span className="font-bold text-purple-900">SnapAid</span>
               </div>
+              <div className="flex items-center gap-4">
+
+                <span className="font-bold w-40 text-gray-900">Kumarswamy Layout</span>
+                <MapPin className="text-gray-800 mr-4"/>
               <AuthButtons />
+              </div>
             </div>
           </header>
           <main className="flex-1">{children}</main>
