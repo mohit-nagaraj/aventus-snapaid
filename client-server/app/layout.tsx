@@ -8,6 +8,7 @@ import { Toaster } from "react-hot-toast";
 import { AuthButtons } from "./components/AuthButton";
 import { HeartPulse } from "lucide-react";
 import { clerkAppearance } from "./clerk-theme";
+import BackButton from "./components/BackButton";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -44,6 +45,7 @@ export default function RootLayout({
           <header className="sticky top-0 z-50 w-full border-b border-purple-100 bg-white/80 backdrop-blur-md">
             <div className="container flex h-16 items-center justify-between px-4 mx-auto">
               <div className="flex items-center gap-2 w-full">
+                <BackButton />
                 <HeartPulse className="h-6 w-6 text-purple-600" />
                 <span className="font-bold text-purple-900">SnapAid</span>
               </div>
