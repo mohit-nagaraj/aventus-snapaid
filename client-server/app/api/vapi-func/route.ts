@@ -42,5 +42,6 @@ export async function POST(req: Request) {
 
 // Mock function
 async function createCase(symptom: string, duration: string) {
+  console.log('Creating case with symptom:', symptom, 'and duration:', duration);
   return 'CASE123456';
 }

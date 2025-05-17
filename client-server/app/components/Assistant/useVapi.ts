@@ -61,6 +61,7 @@ export function useVapi() {
       }
     };
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const onError = (e: any) => {
       setCallStatus(CALL_STATUS.INACTIVE);
       console.error(e);

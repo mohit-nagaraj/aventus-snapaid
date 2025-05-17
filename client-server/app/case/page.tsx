@@ -107,26 +107,27 @@ function CaseDetailsContent() {
   
     setExporting(true);
     
-    // Import jsPDF dynamically to avoid unnecessary loading if not used
     const jsPDF = (await import('jspdf')).default;
     
     try {
-      // Create a new PDF document
       const doc = new jsPDF({
         orientation: 'portrait',
         unit: 'mm',
         format: 'a4'
       });
       
-      // Set some basic styling variables
       const pageWidth = doc.internal.pageSize.getWidth();
       const margin = 20;
       const contentWidth = pageWidth - (margin * 2);
       let yPosition = margin;
       const lineHeight = 7;
       
-      // Helper function to add text with word wrapping
-      const addWrappedText = (text, y, fontSize = 12, isBold = false) => {
+      const addWrappedText = (
+        text: string,
+        y: number,
+        fontSize: number = 12,
+        isBold: boolean = false
+      ): number => {
         doc.setFontSize(fontSize);
         if (isBold) {
           doc.setFont('helvetica', 'bold');
@@ -139,19 +140,16 @@ function CaseDetailsContent() {
         return y + (lineHeight * textLines.length);
       };
       
-      // Add title
       doc.setFillColor(255, 255, 255);
       doc.rect(0, 0, pageWidth, 297, 'F');
       yPosition = addWrappedText('SnapAid Case Report', yPosition, 20, true);
       yPosition += 2;
       
-      // Add generated date
       doc.setTextColor(100, 100, 100);
       yPosition = addWrappedText(`Generated on ${new Date().toLocaleString()}`, yPosition, 10);
       yPosition += 5;
       doc.setTextColor(0, 0, 0);
       
-      // Case Information section
       doc.setDrawColor(200, 200, 200);
       doc.setFillColor(249, 249, 249);
       doc.roundedRect(margin - 5, yPosition - 5, contentWidth + 10, 40, 3, 3, 'FD');
@@ -168,7 +166,6 @@ function CaseDetailsContent() {
       yPosition = addWrappedText(`Last Updated: ${new Date(caseData.updated_at).toLocaleString()}`, yPosition, 12);
       yPosition += 10;
       
-      // Patient Input section
       doc.setDrawColor(200, 200, 200);
       doc.setFillColor(255, 255, 255);
       doc.roundedRect(margin - 5, yPosition - 5, contentWidth + 10, 60, 3, 3, 'FD');
@@ -181,11 +178,9 @@ function CaseDetailsContent() {
       
       yPosition = addWrappedText(caseData.input_text, yPosition, 12);
       
-      // If there's an image, add it in a separate section
       if (caseData.input_image) {
         try {
           const imgData = await getImageAsDataURL(caseData.input_image);
-          // Check if we need a new page
           if (yPosition > 220) {
             doc.addPage();
             yPosition = margin;
@@ -196,11 +191,9 @@ function CaseDetailsContent() {
           yPosition = addWrappedText('Attached Image:', yPosition, 12, true);
           yPosition += 5;
           
-          // Calculate image dimensions to fit within page
           const img = new Image();
           img.src = imgData;
           
-          // Wait for image to load
           await new Promise((resolve) => {
             img.onload = resolve;
           });
@@ -216,9 +209,7 @@ function CaseDetailsContent() {
         }
       }
       
-      // Triage Results section (if available)
       if (caseData.triage_results) {
-        // Check if we need a new page
         if (yPosition > 200) {
           doc.addPage();
           yPosition = margin;
@@ -250,8 +241,6 @@ function CaseDetailsContent() {
         yPosition += 10;
       }
       
-      // Conversation History section
-      // Check if we need a new page
       if (yPosition > 180) {
         doc.addPage();
         yPosition = margin;
@@ -269,13 +258,11 @@ function CaseDetailsContent() {
       
       if (caseData.conversation_history && caseData.conversation_history.length > 0) {
         for (const msg of caseData.conversation_history) {
-          // Check if we need a new page
           if (yPosition > 250) {
             doc.addPage();
             yPosition = margin;
           }
-          
-          // Set fill color for bot vs user
+
           if (msg.user === 'bot') {
             doc.setFillColor(238, 238, 238);
           } else {
@@ -292,7 +279,6 @@ function CaseDetailsContent() {
         yPosition = addWrappedText('No conversation history available.', yPosition, 11, true);
       }
       
-      // Save the PDF
       doc.save(`SnapAid_Case_${caseData.id}.pdf`);
       console.log('PDF generated successfully');
     } catch (err) {

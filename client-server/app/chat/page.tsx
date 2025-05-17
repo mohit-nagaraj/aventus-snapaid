@@ -5,7 +5,7 @@ import { ScrollArea } from "../components/ui/ScrollArea";
 import { MessageList } from "../components/Messages";
 
 export default function ChatPage() {
-    const scrollAreaRef = useRef<any>(null);
+    const scrollAreaRef = useRef<HTMLDivElement | null>(null);
     const viewportRef = useRef<HTMLDivElement>(null) as React.RefObject<HTMLDivElement>;
     const scrollToBottom = () => {
         const viewport = viewportRef.current;

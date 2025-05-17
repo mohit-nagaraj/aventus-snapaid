@@ -37,6 +37,7 @@ export async function PUT(request: Request) {
         const body = await request.json();
         console.log('Request Body:', body);
         const { labels, summary, recommended_action, case_id, risk_score } = body;
+        console.log("risk_score",risk_score);
         if (!case_id || !labels) {
             return NextResponse.json({ error: 'labels and case_id are required' }, { status: 400 });
         }
