@@ -104,24 +104,24 @@
 
 //   const exportToPDF = async () => {
 //     if (!caseData) return;
-  
+
 //     setExporting(true);
-    
+
 //     const jsPDF = (await import('jspdf')).default;
-    
+
 //     try {
 //       const doc = new jsPDF({
 //         orientation: 'portrait',
 //         unit: 'mm',
 //         format: 'a4'
 //       });
-      
+
 //       const pageWidth = doc.internal.pageSize.getWidth();
 //       const margin = 20;
 //       const contentWidth = pageWidth - (margin * 2);
 //       let yPosition = margin;
 //       const lineHeight = 7;
-      
+
 //       const addWrappedText = (
 //         text: string,
 //         y: number,
@@ -134,50 +134,50 @@
 //         } else {
 //           doc.setFont('helvetica', 'normal');
 //         }
-        
+
 //         const textLines = doc.splitTextToSize(text, contentWidth);
 //         doc.text(textLines, margin, y);
 //         return y + (lineHeight * textLines.length);
 //       };
-      
+
 //       doc.setFillColor(255, 255, 255);
 //       doc.rect(0, 0, pageWidth, 297, 'F');
 //       yPosition = addWrappedText('SnapAid Case Report', yPosition, 20, true);
 //       yPosition += 2;
-      
+
 //       doc.setTextColor(100, 100, 100);
 //       yPosition = addWrappedText(`Generated on ${new Date().toLocaleString()}`, yPosition, 10);
 //       yPosition += 5;
 //       doc.setTextColor(0, 0, 0);
-      
+
 //       doc.setDrawColor(200, 200, 200);
 //       doc.setFillColor(249, 249, 249);
 //       doc.roundedRect(margin - 5, yPosition - 5, contentWidth + 10, 40, 3, 3, 'FD');
-      
+
 //       yPosition = addWrappedText('Case Information', yPosition, 16, true);
 //       yPosition += 2;
 //       doc.setDrawColor(220, 220, 220);
 //       doc.line(margin - 5, yPosition, margin + contentWidth + 5, yPosition);
 //       yPosition += 5;
-      
+
 //       yPosition = addWrappedText(`Case ID: ${caseData.id}`, yPosition, 12);
 //       yPosition = addWrappedText(`Status: ${caseData.status}`, yPosition, 12);
 //       yPosition = addWrappedText(`Created: ${new Date(caseData.created_at).toLocaleString()}`, yPosition, 12);
 //       yPosition = addWrappedText(`Last Updated: ${new Date(caseData.updated_at).toLocaleString()}`, yPosition, 12);
 //       yPosition += 10;
-      
+
 //       doc.setDrawColor(200, 200, 200);
 //       doc.setFillColor(255, 255, 255);
 //       doc.roundedRect(margin - 5, yPosition - 5, contentWidth + 10, 60, 3, 3, 'FD');
-      
+
 //       yPosition = addWrappedText('Patient Input', yPosition, 16, true);
 //       yPosition += 2;
 //       doc.setDrawColor(220, 220, 220);
 //       doc.line(margin - 5, yPosition, margin + contentWidth + 5, yPosition);
 //       yPosition += 5;
-      
+
 //       yPosition = addWrappedText(caseData.input_text, yPosition, 12);
-      
+
 //       if (caseData.input_image) {
 //         try {
 //           const imgData = await getImageAsDataURL(caseData.input_image);
@@ -187,75 +187,75 @@
 //           } else {
 //             yPosition += 10;
 //           }
-          
+
 //           yPosition = addWrappedText('Attached Image:', yPosition, 12, true);
 //           yPosition += 5;
-          
+
 //           const img = new Image();
 //           img.src = imgData;
-          
+
 //           await new Promise((resolve) => {
 //             img.onload = resolve;
 //           });
-          
+
 //           const imgWidth = Math.min(contentWidth, 100);
 //           const ratio = img.height / img.width;
 //           const imgHeight = imgWidth * ratio;
-          
+
 //           doc.addImage(imgData, 'PNG', margin, yPosition, imgWidth, imgHeight);
 //           yPosition += imgHeight + 10;
 //         } catch (error) {
 //           console.error('Failed to add image to PDF:', error);
 //         }
 //       }
-      
+
 //       if (caseData.triage_results) {
 //         if (yPosition > 200) {
 //           doc.addPage();
 //           yPosition = margin;
 //         }
-        
+
 //         doc.setDrawColor(200, 200, 200);
 //         doc.setFillColor(243, 243, 243);
 //         doc.roundedRect(margin - 5, yPosition - 5, contentWidth + 10, 70, 3, 3, 'FD');
-        
+
 //         yPosition = addWrappedText('Triage Assessment', yPosition, 16, true);
 //         yPosition += 2;
 //         doc.setDrawColor(220, 220, 220);
 //         doc.line(margin - 5, yPosition, margin + contentWidth + 5, yPosition);
 //         yPosition += 5;
-        
+
 //         yPosition = addWrappedText('Labels:', yPosition, 12, true);
 //         yPosition += 1;
 //         yPosition = addWrappedText(caseData.triage_results.labels.join(', '), yPosition, 11);
 //         yPosition += 3;
-        
+
 //         yPosition = addWrappedText('Summary:', yPosition, 12, true);
 //         yPosition += 1;
 //         yPosition = addWrappedText(caseData.triage_results.summary, yPosition, 11);
 //         yPosition += 3;
-        
+
 //         yPosition = addWrappedText('Recommended Action:', yPosition, 12, true);
 //         yPosition += 1;
 //         yPosition = addWrappedText(caseData.triage_results.recommended_action, yPosition, 11);
 //         yPosition += 10;
 //       }
-      
+
 //       if (yPosition > 180) {
 //         doc.addPage();
 //         yPosition = margin;
 //       }
-      
+
 //       doc.setDrawColor(200, 200, 200);
 //       doc.setFillColor(255, 255, 255);
 //       doc.roundedRect(margin - 5, yPosition - 5, contentWidth + 10, 80, 3, 3, 'FD');
-      
+
 //       yPosition = addWrappedText('Conversation History', yPosition, 16, true);
 //       yPosition += 2;
 //       doc.setDrawColor(220, 220, 220);
 //       doc.line(margin - 5, yPosition, margin + contentWidth + 5, yPosition);
 //       yPosition += 5;
-      
+
 //       if (caseData.conversation_history && caseData.conversation_history.length > 0) {
 //         for (const msg of caseData.conversation_history) {
 //           if (yPosition > 250) {
@@ -268,7 +268,7 @@
 //           } else {
 //             doc.setFillColor(245, 245, 245);
 //           }
-          
+
 //           doc.roundedRect(margin, yPosition - 3, contentWidth - 10, 20, 2, 2, 'F');
 //           yPosition = addWrappedText(msg.user === 'bot' ? 'AI Agent' : 'User', yPosition, 11, true);
 //           yPosition += 1;
@@ -278,7 +278,7 @@
 //       } else {
 //         yPosition = addWrappedText('No conversation history available.', yPosition, 11, true);
 //       }
-      
+
 //       doc.save(`SnapAid_Case_${caseData.id}.pdf`);
 //       console.log('PDF generated successfully');
 //     } catch (err) {
@@ -318,7 +318,7 @@
 //           )}
 //         </button>
 //       </div>
-      
+
 //       <p className="text-sm text-gray-500 mb-4">
 //         Created at: {new Date(caseData.created_at).toLocaleString()} • Status:{' '}
 //         <span className="font-medium">{caseData.status}</span>
@@ -482,7 +482,7 @@ function CaseDetailsContent() {
 
   const updateCaseStatus = async (newStatus: string) => {
     if (!caseData || newStatus === caseData.status) return;
-    
+
     setStatusUpdating(true);
     try {
       const response = await fetch('/api/case/status', {
@@ -495,16 +495,16 @@ function CaseDetailsContent() {
           status: newStatus
         }),
       });
-      
+
       if (!response.ok) {
         throw new Error('Failed to update case status');
       }
-      
+
       setCaseData({
         ...caseData,
         status: newStatus
       });
-      
+
       setStatusChanged(true);
       setTimeout(() => setStatusChanged(false), 3000);
     } catch (error) {
@@ -798,27 +798,27 @@ function CaseDetailsContent() {
       <div className="p-6">
         <div className="mb-6">
           <h1 className="text-xl font-bold mb-1">Case #{caseData.id}</h1>
-          <p className="text-sm text-gray-500">
-            Created at: {new Date(caseData.created_at).toLocaleString()} • Status:{" "}
-            <div className="relative w-full max-w-sm">
-  <label htmlFor="status-dropdown" className="block text-sm font-medium text-gray-700 mb-1">
-    Case Status
-  </label>
-  <div className="relative">
-    <select
-      id="status-dropdown"
-      value={caseData.status}
-      onChange={(e) => updateCaseStatus(e.target.value)}
-      disabled={statusUpdating}
-      className="inline-block rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-800   text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 disabled:opacity-60"
-    >
-      {validStatuses.map((status) => (
-        <option key={status} value={status}>
-          {status}
-        </option>
-      ))}
-    </select>
-    {/* <p className="mt-4 text-sm text-gray-500">
+          <p className="text-sm text-gray-500 flex">
+            Created at: {new Date(caseData.created_at).toLocaleString()} •
+            <div className=" ml-2 items-start relative mt flex w-full max-w-sm">
+              <label htmlFor="status-dropdown" className="block text-sm  mr-2 text-gray-500 mb-1">
+                Case Status
+              </label>
+              <div className="relative">
+                <select
+                  id="status-dropdown"
+                  value={caseData.status}
+                  onChange={(e) => updateCaseStatus(e.target.value)}
+                  disabled={statusUpdating}
+                  className="inline-block rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-800   text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 disabled:opacity-60"
+                >
+                  {validStatuses.map((status) => (
+                    <option key={status} value={status}>
+                      {status}
+                    </option>
+                  ))}
+                </select>
+                {/* <p className="mt-4 text-sm text-gray-500">
       Created at: {new Date(caseData.created_at).toLocaleString()}
     </p>
   
@@ -828,37 +828,37 @@ function CaseDetailsContent() {
       </span>
     </div> */}
 
-    {statusUpdating && (
-      <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
-        <svg
-          className="animate-spin h-4 w-4 text-gray-500"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-        >
-          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-          <path
-            className="opacity-75"
-            fill="currentColor"
-            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 
+                {statusUpdating && (
+                  <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
+                    <svg
+                      className="animate-spin h-4 w-4 text-gray-500"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 
               5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 
               5.824 3 7.938l3-2.647z"
-          ></path>
-        </svg>
-      </div>
-    )}
-  </div>
+                      ></path>
+                    </svg>
+                  </div>
+                )}
+              </div>
 
-  {statusChanged && (
-    <p className="mt-2 text-sm text-green-600 animate-fade-in">
-      ✅ Status updated
-    </p>
-  )}
+              {statusChanged && (
+                <p className="mt-2 text-sm text-green-600 animate-fade-in">
+                  ✅ Status updated
+                </p>
+              )}
 
-</div>
+            </div>
 
           </p>
-          
+
         </div>
 
         <div className="mb-6 border rounded-md overflow-hidden">
@@ -891,6 +891,17 @@ function CaseDetailsContent() {
               <div>
                 <div className="text-sm font-medium text-gray-700 mb-1">Recommended Action:</div>
                 <p className="text-gray-700">{caseData.triage_results.recommended_action}</p>
+              </div>
+              <div>
+                <div className="text-sm font-medium text-gray-700 mb-1 mt-2">Nearest hospital: <Link className="text-blue-500 underline" href={"https://maps.app.goo.gl/RVf7sWttzLc1mSp67"}> Sagar hospitals
+                </Link></div>
+                <div className="mb-4">
+        <img
+          src={"https://uwfcozyrcwyvmmxjvjvy.supabase.co/storage/v1/object/public/snapaid-storage/hospital/sagar.png"}
+          alt="Case attachment"
+          className="max-w-full max-h-80 object-contain rounded-lg border border-gray-200"
+        />
+      </div>
               </div>
             </div>
           </div>
