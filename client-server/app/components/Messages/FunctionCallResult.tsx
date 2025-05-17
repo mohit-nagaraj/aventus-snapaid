@@ -1,20 +1,24 @@
-import { FunctionCallResultMessage } from "@/utils/types/conversation.type";
+import type { FunctionCallResultMessage } from "@/utils/types/conversation.type"
+import { Card } from "@/components/ui/card"
+import { Info } from "lucide-react"
 
 interface FunctionCallResultMessageProps {
-  message: FunctionCallResultMessage;
+  message: FunctionCallResultMessage
 }
 
-export default function FunctionCallResult({
-  message,
-}: FunctionCallResultMessageProps) {
-    console.log("FunctionCallResult", message);
+export default function FunctionCallResult({ message }: FunctionCallResultMessageProps) {
   return (
-    <div
-      className={`flex w-4/5 text-sm mb-4 justify-end text-[#1a0400] font-medium mx-auto`}
-    >
-      <div className={`p-3 rounded-xl bg-green-100 mx-auto`}>
-        <p className="leading-relaxed">{message.functionCallResult.result}</p>
-      </div>
+    <div className="flex w-full text-sm mb-4 justify-center">
+      <Card className="p-4 rounded-xl bg-purple-50 text-purple-900 border-purple-200 max-w-[80%] shadow-sm">
+        <div className="flex items-start">
+          <div className="mr-3 mt-1">
+            <div className="p-1 bg-purple-100 rounded-full">
+              <Info className="h-4 w-4 text-purple-600" />
+            </div>
+          </div>
+          <p className="leading-relaxed">{message.functionCallResult.result}</p>
+        </div>
+      </Card>
     </div>
-  );
+  )
 }
