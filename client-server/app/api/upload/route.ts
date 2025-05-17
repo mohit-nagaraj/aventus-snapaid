@@ -5,12 +5,11 @@ export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData();
     const file = formData.get('file') as File | null;
-    const folder = formData.get('folder') as string || 'general';
-    
+    // const folder = formData.get('folder') as string || 'general';
     if (!file) {
       return NextResponse.json({ error: 'No file provided' }, { status: 400 });
     }
-
+    
     const arrayBuffer = await file.arrayBuffer();
     const buffer = new Uint8Array(arrayBuffer);
     
@@ -18,10 +17,11 @@ export async function POST(request: NextRequest) {
     const originalFilename = file.name;
     const safeName = originalFilename.replace(/[^a-zA-Z0-9.-]/g, '_');
     const filename = `${timestamp}-${safeName}`;
+    // console.log('Uploading file:', filename, file.type, folder);
     
     const { error } = await supaclient.storage
       .from('snapaid-storage')
-      .upload(`${folder}/${filename}`, buffer, {
+      .upload(`images/${filename}`, buffer, {
         contentType: file.type,
         cacheControl: '3600',
         upsert: true
@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
 
     const fileUrl = supaclient.storage
       .from('snapaid-storage')
-      .getPublicUrl(`${folder}/${filename}`).data.publicUrl;
+      .getPublicUrl(`images/${filename}`).data.publicUrl;
 
     return NextResponse.json({ url: fileUrl }, { status: 200 });
   } catch (error) {

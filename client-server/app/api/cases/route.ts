@@ -28,39 +28,41 @@ export async function POST(request: NextRequest) {
 
         const {id} = data
         console.log("case_id", id)
+        try{
+            const fastapiResponse = await fetch(`${process.env.NEXT_PUBLIC_FASTAPI_URL}/predict`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    input_text
+                }),
+            });
+            console.log('FastAPI response status:', fastapiResponse);
+    
+            const fastapiData = await fastapiResponse.json();
+    
+            console.log('FastAPI response:', fastapiData);
+            
+            await fetch(`http://localhost:3000/api/triage`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    labels: fastapiData.label,
+                    summary: fastapiData.summary,
+                    recommended_action: fastapiData.recommended_action,
+                    risk_score: fastapiData.risk_score,
+                    case_id: id
+                }),
+            });
+    
+            if (error) console.error('Webhook error:', error)
+        } catch(e: any){
+            console.log("err",e)
+        }
 
-        const fastapiResponse = await fetch(`${process.env.NEXT_PUBLIC_FASTAPI_URL}/predict`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                input_text,
-                input_image
-            }),
-        });
-
-        console.log('FastAPI response status:', fastapiResponse.status);
-
-        const fastapiData = await fastapiResponse.json();
-
-        console.log('FastAPI response:', fastapiData);
-
-        await fetch(`http://localhost:3000/api/triage`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                labels: fastapiData.label,
-                summary: fastapiData.summary,
-                recommended_action: fastapiData.recommended_action,
-                risk_score: fastapiData.risk_score,
-                case_id: id
-            }),
-        });
-
-        if (error) console.error('Webhook error:', error)
 
         return NextResponse.json({ message: 'successfull', data: data }, { status: 200 });
     } catch (error) {
