@@ -26,24 +26,41 @@ export async function POST(request: NextRequest) {
             .select()
             .single();
 
-        const fastapiResponse = await fetch(`${process.env.NEXT_PUBLIC_FASTAPI_URL}/check`, {
+        const {id} = data
+        console.log("case_id", id)
+
+        const fastapiResponse = await fetch(`${process.env.NEXT_PUBLIC_FASTAPI_URL}/predict`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                user_id,
                 input_text,
-                input_image,
-                input_voice,
-                conversation_history: [],
+                input_image
             }),
         });
 
-        console.log('FastAPI response:', fastapiResponse.status);
+        console.log('FastAPI response status:', fastapiResponse.status);
+
+        const fastapiData = await fastapiResponse.json();
+
+        console.log('FastAPI response:', fastapiData);
+
+        await fetch(`http://localhost:3000/api/triage`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                labels: fastapiData.label,
+                summary: fastapiData.summary,
+                recommended_action: fastapiData.recommended_action,
+                risk_score: fastapiData.risk_score,
+                case_id: id
+            }),
+        });
 
         if (error) console.error('Webhook error:', error)
-
 
         return NextResponse.json({ message: 'successfull', data: data }, { status: 200 });
     } catch (error) {
@@ -100,29 +117,3 @@ export async function GET(request: NextRequest) {
     }
 }
 
-
-// export async function GET(request: NextRequest) {
-//     try {
-//         const { searchParams } = new URL(request.url);
-//         const user_id = searchParams.get('user_id');
-
-//         if (!user_id) {
-//             return NextResponse.json({ error: 'User ID is required' }, { status: 400 });
-//         }
-
-//         const { data, error } = await supaclient
-//             .from('cases')
-//             .select('*')
-//             .eq('user_id', user_id);
-
-//         if (error) {
-//             console.error('Error fetching cases:', error);
-//             return NextResponse.json({ error: 'Failed to fetch cases' }, { status: 500 });
-//         }
-
-//         return NextResponse.json(data, { status: 200 });
-//     } catch (error) {
-//         console.error('Error processing request:', error);
-//         return NextResponse.json({ error: 'Failed to process request' }, { status: 500 });
-//     }
-// }
