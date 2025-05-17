@@ -35,7 +35,9 @@ export async function POST(request: NextRequest) {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                input_text
+                input_text,
+                input_image,
+                input_voice
             }),
         });
         console.log('FastAPI response status:', fastapiResponse);

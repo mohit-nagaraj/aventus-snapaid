@@ -26,7 +26,7 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: 'Failed to create triage' }, { status: 500 });
         }
 
-        if (hasEmergencyLabel(labels)) {
+        if (labels && hasEmergencyLabel(labels)) {
             await sendEmergencyNotifications(case_id);
         }
 
@@ -62,7 +62,7 @@ export async function PUT(request: Request) {
             return NextResponse.json({ error: 'Failed to update triage' }, { status: 500 });
         }
 
-        if (hasEmergencyLabel(labels)) {
+        if (labels && hasEmergencyLabel(labels)) {
             await sendEmergencyNotifications(case_id);
         }
 
