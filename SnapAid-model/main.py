@@ -45,7 +45,9 @@ async def analyze_message(msg: PredictionInput):
     input_text =msg.input_text
     print("input text:",input_text)
     input_image = msg.input_image
+    print("input image:",input_image)
     input_voice = msg.input_voice
+    print("input voice:",input_voice)
     
     transcription = ""
     if input_voice:
@@ -54,7 +56,15 @@ async def analyze_message(msg: PredictionInput):
         print("Transcription:", transcription)
 
 
-    full_message = transcription + "\n" + input_text if transcription else input_text
+    # full_message = transcription + "\n" + input_text if transcription else input_text
+    full_message = ""
+    if transcription:
+        full_message += transcription
+    if input_text:
+        if full_message:
+            full_message += "\n" + input_text
+        else:
+            full_message = input_text
     print("Full message:", full_message)
 
     prompt = """
@@ -64,28 +74,33 @@ async def analyze_message(msg: PredictionInput):
         2. Symptom-Based labels (from: Fever, Cough, Chest Pain, etc.)
         3. System-Based labels (from: Cardiovascular, Respiratory, etc.)
         4. Contextual Labels (from: Acute Onset, Chronic Condition, etc.)
+        5. Domain Specific Labels (from: Cardiology, Neurology, etc.)
         If there is no label in any of the category, do not return anything.
-        5. A concise medical summary
-        6. A recommended action
-        7. A risk score: Immediate = 10, Delayed = 6, Minor = 3, Expectant = 1
-
-        Return the result as just a valid JSON without markdown.
-        All labels are to be in a format of string and sent inside an array field named label. 
-        if there are multiple labels, separate them with commas.
-        If the patient is fine, do not return any label.
-        If it is an extreme condition that requires immediate attention, please label it as "Emergency" and provide a risk score of 10.
+        6. A concise medical summary
+        7. A recommended action
+        8. A risk score: Immediate = 10, Delayed = 6, Minor = 3, Expectant = 1
+        Note:
+            Return the result as just a valid JSON without markdown.
+            All labels are to be in a format of string and sent inside an array field named label. 
+            if there are multiple labels, separate them with commas.
+            If the input is out of context,and only input text is sent, return "I cannot help with this issue.Kindly post a health related issue".
+            If the patient is fine, do not return any label.
+            If it is an extreme condition that requires immediate attention, please label it as "Emergency" and provide a risk score of 10.
         Respond in this JSON format:
         example:
         {
-        "label": ["Triage Priority", "Symptom-Based", "System-Based", "Contextual",...],
+        "label": ["Minor", "Fever", "Respiratory", "Acute Onset", "Cardiology"],
         "summary": "Short medical summary here.",
         "risk_score": 5,
         "recommended_action": "Recommended action here."
         }
 
         Message:
-        """+ input_text + full_message 
-    # print(prompt)/
+        """
+    if full_message:
+        prompt += full_message
+    if input_image:
+        prompt += "Please analyze the provided image and return the results as instructed."
     try:
         # If image is provided, read and convert to Gemini-compatible blob
         if input_image:
@@ -100,6 +115,7 @@ async def analyze_message(msg: PredictionInput):
             response = model.generate_content(prompt)
 
         cleaned = re.sub(r"^```json\s*|\s*```$", "", response.text.strip(), flags=re.IGNORECASE)
+        print(json.loads(cleaned))
         return json.loads(cleaned)
     
     except Exception as e:

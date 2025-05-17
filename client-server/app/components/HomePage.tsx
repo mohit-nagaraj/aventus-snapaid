@@ -9,6 +9,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 // import { auth } from "@clerk/nextjs/server";
 import { HeartPulse, ClipboardList, MessageSquare, Activity, Calendar, User } from "lucide-react";
 import { useAuth } from "@clerk/nextjs";
+import  Quiz from "@/app/quiz/page";
 
 const HomePage =  () => {
     const navigate = useRouter()
@@ -223,6 +224,9 @@ const HomePage =  () => {
               </p>
             </div>
           </div>
+        </section>
+        <section className="mt-12 text-center">
+          <Quiz/>
         </section>
       </main>
     </div>
