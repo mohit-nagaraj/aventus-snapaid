@@ -1,6 +1,15 @@
-import { clerkMiddleware } from '@clerk/nextjs/server';
+import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'
+import { NextResponse } from 'next/server'
 
-export default clerkMiddleware();
+const isAdminRoute = createRouteMatcher(['/doctor(.*)'])
+
+export default clerkMiddleware(async (auth, req) => {
+  // Protect all routes starting with `/doctor`
+  if (isAdminRoute(req) && (await auth()).sessionClaims?.metadata?.role !== 'doctor') {
+    const url = new URL('/', req.url)
+    return NextResponse.redirect(url)
+  }
+})
 
 export const config = {
   matcher: [
@@ -9,4 +18,4 @@ export const config = {
     // Always run for API routes
     '/(api|trpc)(.*)',
   ],
-};
+}
