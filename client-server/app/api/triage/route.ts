@@ -9,8 +9,8 @@ export async function POST(request: Request) {
         const body = await request.json();
         console.log('Request Body:', body);
         const { labels,summary,recommended_action, case_id } = body;
-        if (!case_id || !labels) {
-            return NextResponse.json({ error: 'labels and case_id are required' }, { status: 400 });
+        if (!case_id) {
+            return NextResponse.json({ error: 'case_id are required' }, { status: 400 });
         }
 
         const { error } = await supaclient
@@ -44,7 +44,7 @@ export async function PUT(request: Request) {
         console.log('Request Body:', body);
         const { labels, summary, recommended_action, case_id, risk_score } = body;
 
-        if (!case_id || !labels) {
+        if (!case_id) {
             return NextResponse.json({ error: 'labels and case_id are required' }, { status: 400 });
         }
 

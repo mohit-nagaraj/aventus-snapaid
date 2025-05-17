@@ -1,8 +1,5 @@
-transformers
-torch
-pandas
-scikit-learn
 google-generativeai
 fastapi
 uvicorn
 dotenv
+requests
