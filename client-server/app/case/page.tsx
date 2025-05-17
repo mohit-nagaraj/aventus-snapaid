@@ -67,7 +67,7 @@ function CaseDetailsContent() {
   const [statusUpdating, setStatusUpdating] = useState(false);
   const [statusChanged, setStatusChanged] = useState(false);
 
-  const validStatuses = ['Opened', 'Triaged', 'Verified', 'Treating', 'Resolved', 'needsinfo'];
+  const validStatuses = ['Triaged', 'Verified', 'Treating', 'Resolved', 'needsinfo'];
 
   useEffect(() => {
     if (!caseid) {
