@@ -125,7 +125,7 @@ export default function QuizPage({ params }: QuizParams) {
   const [answers, setAnswers] = useState<string[]>([])
   const [quizComplete, setQuizComplete] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [submissionResult, setSubmissionResult] = useState<any>(null)
+  const [submissionResult, setSubmissionResult] = useState<string | null>(null)
   const [submissionError, setSubmissionError] = useState<string | null>(null)
 
   const quizType = params.type

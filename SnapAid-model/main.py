@@ -3,7 +3,7 @@ from PIL import Image
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 import google.generativeai as genai
-from typing import Optional
+from typing import Optional, Dict, List
 import os
 from dotenv import load_dotenv
 import json
@@ -32,6 +32,12 @@ app.add_middleware(
 
 class PredictionInput(BaseModel):
     input_text: str
+    input_image: Optional[str] = None
+    input_voice: Optional[str] = None
+
+class ConversationInput(BaseModel):
+    conversation_history: List[Dict[str, str]]
+    input_text: Optional[str] = None
     input_image: Optional[str] = None
     input_voice: Optional[str] = None
 
@@ -119,6 +125,91 @@ async def analyze_message(msg: PredictionInput):
         cleaned = re.sub(r"^```json\s*|\s*```$", "", response.text.strip(), flags=re.IGNORECASE)
         print(json.loads(cleaned))
         return json.loads(cleaned)
+    
+    except Exception as e:
+        print("Error:", str(e))
+        return JSONResponse(status_code=500, content={"error": str(e)})
+
+@app.post("/conversation")
+async def handle_conversation(conv_input: ConversationInput):
+    """
+    Handle conversation history and respond to the latest user query.
+    The conversation_history is a list of dictionaries with 'text' and 'user' keys.
+    The latest entry in the conversation_history is the current user query.
+    """
+    print("Received conversation input:", conv_input)
+    
+    conversation_history = conv_input.conversation_history
+    input_text = conv_input.input_text
+    input_image = conv_input.input_image
+    input_voice = conv_input.input_voice
+    
+    if not conversation_history:
+        return JSONResponse(status_code=400, content={"error": "Conversation history is required"})
+    
+    # Get the latest user message
+    latest_message = conversation_history[-1]
+    
+    if latest_message.get("user") != "user":
+        return JSONResponse(status_code=400, content={"error": "The latest message must be from the user"})
+    
+    latest_query = latest_message.get("text", "")
+    
+    # If input_text is provided, append it to the latest query
+    if input_text:
+        latest_query = f"{latest_query}\n{input_text}" if latest_query else input_text
+    
+    # Process voice input if provided
+    transcription = ""
+    if input_voice:
+        transcription = describe_audio_clip_from_url(input_voice)
+        print("Transcription from voice:", transcription)
+        if transcription:
+            latest_query = f"{latest_query}\n{transcription}" if latest_query else transcription
+    
+    # Format the conversation history for the model's prompt
+    formatted_history = ""
+    if len(conversation_history) > 1:
+        for msg in conversation_history[:-1]:  # Exclude the latest message
+            role = "Patient" if msg.get("user") == "user" else "Medical Assistant"
+            formatted_history += f"{role}: {msg.get('text', '')}\n"
+    
+    prompt = """
+    You are a medical triage assistant having a conversation with a patient. 
+    Based on the conversation history and the patient's latest query, provide a helpful and informative response.
+    
+    You should assess the medical situation and provide appropriate advice, but avoid diagnosing or prescribing medication.
+    If it's a serious situation, recommend appropriate medical attention.
+    
+    Reply in a conversational manner, not in JSON format. Your response should be a single string that directly addresses the patient's query.
+    
+    If the patient's question is out of the medical context, politely remind them that you are a medical triage assistant and can only help with health-related queries.
+    """
+    
+    # Add conversation history to prompt if it exists
+    if formatted_history:
+        prompt += f"\n\nConversation history:\n{formatted_history}"
+    
+    # Add latest query to prompt
+    prompt += f"\nPatient's latest query: {latest_query}"
+    
+    try:
+        # Process image if provided
+        if input_image:
+            print("Downloading image from URL...")
+            response = requests.get(input_image)
+            image = Image.open(BytesIO(response.content))
+            print("DOne")
+            
+            # Add image context to prompt
+            image_prompt = prompt + "\n\nThe patient has also shared an image. Please analyze the image along with their query."
+            response = model.generate_content([image, image_prompt])
+        else:
+            response = model.generate_content(prompt)
+        
+        print(response.text.strip())
+        # Return the text response directly
+        return {"response": response.text.strip()}
     
     except Exception as e:
         print("Error:", str(e))

@@ -721,23 +721,73 @@ function CaseDetailsContent() {
     }
   }
 
-  const handleSendMessage = () => {
-    if (!newMessage.trim() || !caseData) return
-
-    setSendingMessage(true)
-
-    // Simulate sending message to API
-    setTimeout(() => {
-      const updatedCase = {
-        ...caseData,
-        conversation_history: [...(caseData.conversation_history || []), { user: "user", text: newMessage }],
-      }
-
-      setCaseData(updatedCase)
-      setNewMessage("")
-      setSendingMessage(false)
-    }, 500)
-  }
+  const handleSendMessage = async () => {
+    if (!newMessage.trim() || !caseData) return;
+  
+    setSendingMessage(true);
+  
+    const updatedCase = {
+      ...caseData,
+      conversation_history: [
+        ...(caseData.conversation_history || []),
+        { user: "user", text: newMessage },
+      ],
+    };
+  
+    // Update local state and clear input
+    setCaseData(updatedCase);
+    setNewMessage("");
+  
+    // Save to your backend (optional step depending on use case)
+    await fetch("/api/case/conversation", {
+      method: "POST",
+      body: JSON.stringify({
+        case_id: caseid,
+        conversation_history: updatedCase.conversation_history,
+      }),
+    });
+  
+    try {
+      const fastapiResponse = await fetch(`${process.env.NEXT_PUBLIC_FASTAPI_URL}/conversation`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          conversation_history: updatedCase.conversation_history,
+        }),
+      });
+  
+      const result = await fastapiResponse.json(); // Await response body
+      console.log("fastapi response:", result);
+  
+      // Update state with bot reply
+      const updatedWithBot = {
+        ...updatedCase,
+        conversation_history: [
+          ...updatedCase.conversation_history,
+          { user: "bot", text: result.response },
+        ],
+      };
+  
+      setCaseData(updatedWithBot);
+  
+      // Optionally update the conversation on your database
+      await fetch("/api/case/conversation", {
+        method: "POST",
+        body: JSON.stringify({
+          case_id: caseid,
+          conversation_history: updatedWithBot.conversation_history,
+        }),
+      });
+  
+    } catch (err) {
+      console.error("Error calling FastAPI:", err);
+    }
+  
+    setSendingMessage(false);
+  };
+  
 
   if (loading)
     return (
@@ -848,7 +898,7 @@ function CaseDetailsContent() {
               </div>
 
               {statusChanged && (
-                <p className="mt-2 text-sm text-green-600 animate-fade-in">
+                <p className="ml-2 text-sm text-green-600 animate-fade-in">
                   ✅ Status updated
                 </p>
               )}
