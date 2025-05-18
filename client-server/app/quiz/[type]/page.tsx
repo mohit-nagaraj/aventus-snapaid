@@ -112,13 +112,13 @@ const quizData = {
   },
 }
 
-interface PageProps {
+type QuizParams = {
   params: {
     type: string
   }
 }
 
-export default function QuizPage({ params }: PageProps) {
+export default function QuizPage({ params }: QuizParams) {
   const router = useRouter()
   const [currentQuestion, setCurrentQuestion] = useState(0)
   const [selectedOption, setSelectedOption] = useState<string | null>(null)
