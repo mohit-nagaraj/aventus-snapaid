@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from PIL import Image
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
@@ -7,7 +7,9 @@ from typing import Optional, Dict, List
 import os
 from dotenv import load_dotenv
 import json
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
+from datetime import datetime
+from typing import List, Optional, Dict
 import re
 import requests
 from io import BytesIO
@@ -211,4 +213,64 @@ async def handle_conversation(conv_input: ConversationInput):
     
     except Exception as e:
         print("Error:", str(e))
+        return JSONResponse(status_code=500, content={"error": str(e)})
+
+class QuizRequest(BaseModel):
+    quiz_type: str
+    responses: List[Dict]  # Each item has question_id, question_text, answer
+    timestamp: Optional[str] = Field(default_factory=lambda: datetime.utcnow().isoformat())
+    metadata: Optional[Dict] = {}
+
+class QuizResult(BaseModel):
+    score: Optional[int] = None  
+    summary: str
+    feedback: Optional[str] = None  
+    recommendations: Optional[str] = None
+
+def generate_gemini_prompt(quiz: QuizRequest) -> str:
+    prompt = f"You are a health expert AI. Analyze the following responses from a '{quiz.quiz_type}' quiz and give:\n"
+    prompt += "- A health score out of 100\n"
+    prompt += "- A short summary of the user's condition\n"
+    prompt += "- Feedback on each question\n"
+    prompt += "- Overall health advice or recommendation\n\n"
+    prompt += "Give without any markdown or code block and disclaimers.\n"
+
+    prompt += "Responses:\n"
+    for item in quiz.responses:
+        prompt += f"Q{item['question_id']}: {item['question_text']}\nAnswer: {item['answer']}\n\n"
+
+    return prompt
+
+@app.post("/quiz")
+async def process_quiz_results(quiz: QuizRequest):
+    try:
+        print("Received quiz results:", quiz)
+        prompt = generate_gemini_prompt(quiz)
+        model = genai.GenerativeModel("gemini-2.0-flash")
+        response = model.generate_content(prompt)
+        ai_text = response.text.strip()
+
+        print("Gemini response:", ai_text)
+
+        # score_match = re.search(r"\*\*Overall Health Score: (\d+)/\d+\*\*", ai_text)
+        # score = int(score_match.group(1)) if score_match else None
+
+        # # Extract summary (first paragraph)
+        # summary_match = re.search(r"\*\*Summary of User's Condition:\*\*\n\n(.+?)\n\n", ai_text, re.DOTALL)
+        # summary = summary_match.group(1).strip() if summary_match else "No summary found."
+
+        # # Extract feedback (optional full block or parse it into list if needed)
+        # feedback_match = re.search(r"\*\*Feedback on Each Question:\*\*\n\n(.+?)\n\n\*\*Overall Health Advice", ai_text, re.DOTALL)
+        # feedback = feedback_match.group(1).strip() if feedback_match else "No detailed feedback found."
+
+        # # Extract recommendations
+        # recommendations_match = re.search(r"\*\*Overall Health Advice and Recommendations:\*\*\n\n(.+?)\n\n\*\*Important Disclaimer", ai_text, re.DOTALL)
+        # recommendations = recommendations_match.group(1).strip() if recommendations_match else "No recommendations found."
+
+        # Return response
+        return ai_text
+
+
+    except Exception as e:
+        print("Error processing quiz results:", str(e))
         return JSONResponse(status_code=500, content={"error": str(e)})
