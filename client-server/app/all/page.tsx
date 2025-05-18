@@ -3,15 +3,17 @@ import { Case } from '@/types/globals';
 import { useEffect, useState, useMemo } from 'react';
 import { Badge } from '../components/Badge';
 import { CaseRow } from '../components/CaseRow';
-import { Search } from 'lucide-react';
+import {  Search } from 'lucide-react';
+import Link from 'next/link';
 
 export default function CasesPage() {
   const [cases, setCases] = useState<Case[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedStatus, setSelectedStatus] = useState<'all' | 'Opened' | 'Closed'>('all');
+  const [selectedStatus, setSelectedStatus] = useState<"all" | "Opened" | "Verified" | "Triaged" | "Treating" | "Resolved" | "Closed">("all");
+  const [selectedRisk, setSelectedRisk] = useState<"all" | "immediate" | "critical" | "emergency" | "delayed" | "minor" | "stable" | "chronic" | "expectant">("all");
+
 
   useEffect(() => {
     async function fetchCases() {
@@ -35,16 +37,19 @@ export default function CasesPage() {
   }, []);
 
   // Memoized filtered case list
-  const filteredCases = useMemo(() => {
-    return cases.filter((c) => {
-      const matchesStatus =
-        selectedStatus === 'all' || c.status === selectedStatus;
-      const matchesQuery = c.input_text
-        .toLowerCase()
-        .includes(searchQuery.toLowerCase());
-      return matchesStatus && matchesQuery;
-    });
-  }, [cases, searchQuery, selectedStatus]);
+const filteredCases = useMemo(() => {
+  return cases.filter((c) => {
+    const matchesStatus =
+      selectedStatus === 'all' || c.status === selectedStatus;
+    // Use optional chaining and fallback to 'all' if risk is missing
+    const matchesRisk =
+      selectedRisk === 'all' || (c as any).risk === selectedRisk;
+    const matchesQuery = c.input_text
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase());
+    return matchesStatus && matchesRisk && matchesQuery;
+  });
+}, [cases, searchQuery, selectedStatus, selectedRisk]);
 
   if (loading) {
     return (
@@ -53,6 +58,7 @@ export default function CasesPage() {
       </div>
     );
   }
+
 
   if (error) {
     return (
@@ -85,22 +91,45 @@ export default function CasesPage() {
             </div>
 
             <div className="flex items-center gap-2">
+              {/* <div className="flex items-center gap-1">
+                <span className="text-sm text-gray-600">Risk:</span>
+                <select
+                  value={selectedRisk}
+                  onChange={(e) => setSelectedRisk(e.target.value as "immediate" | "critical" | "emergency" | "delayed" | "minor" | "stable" | "chronic" | "expectant")}
+                  className="bg-white border border-gray-300 text-sm rounded-lg p-2 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none"
+                >
+                  <option value="all">All</option>
+                  <option value="immediate">Immediate</option>
+                  <option value="critical">Critical</option>
+                  <option value="emergency">Emergency</option>
+                  <option value="delayed">Delayed</option>
+                  <option value="minor">Minor</option>
+                  <option value="stable">Stable</option>
+                  <option value="chronic">Chronic</option>
+                  <option value="expectant">Expectant</option>
+                </select>
+              </div> */}
               <div className="flex items-center gap-1">
                 <span className="text-sm text-gray-600">Status:</span>
                 <select
                   value={selectedStatus}
-                  onChange={(e) => setSelectedStatus(e.target.value as 'all' | 'Opened' | 'Closed')}
+                  onChange={(e) => setSelectedStatus(e.target.value as "all" | "Opened" | "Verified" | "Triaged" | "Treating" | "Resolved" | "Closed")}
                   className="bg-white border border-gray-300 text-sm rounded-lg p-2 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none"
                 >
                   <option value="all">All</option>
                   <option value="Opened">Opened</option>
+                  <option value="Verified">Verified</option>
+                  <option value="Triaged">Triaged</option>
+                  <option value="Treating">Treating</option>
+                  <option value="Resolved">Resolved</option>
                   <option value="Closed">Closed</option>
                 </select>
               </div>
-
-              <button className="bg-purple-600 hover:bg-purple-700 text-white font-medium py-2 px-4 rounded-md transition-colors">
-                New case
-              </button>
+              <Link href="/create">
+                <button className="bg-purple-600 hover:bg-purple-700 text-white font-medium py-2 px-4 rounded-md transition-colors">
+                  New case
+                </button>
+              </Link>
             </div>
           </div>
 

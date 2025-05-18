@@ -760,9 +760,7 @@ function CaseDetailsContent() {
     <div className="max-w-4xl mx-auto">
       {/* Header */}
       <div className="flex items-center p-4 bg-purple-50 border-b">
-        <Link href="/cases" className="mr-3">
-          <ArrowLeft className="h-5 w-5 text-gray-600" />
-        </Link>
+
         <div className="flex items-center">
           <svg
             xmlns="http://www.w3.org/2000/svg"

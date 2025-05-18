@@ -9,7 +9,7 @@ import { AuthButtons } from "./components/AuthButton";
 import { HeartPulse, MapPin } from "lucide-react";
 import { clerkAppearance } from "./clerk-theme";
 import BackButton from "./components/BackButton";
-
+import Link from "next/link";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -47,7 +47,9 @@ export default function RootLayout({
               <div className="flex items-center gap-2 w-full">
                 <BackButton />
                 <HeartPulse className="h-6 w-6 text-purple-600" />
-                <span className="font-bold text-purple-900">SnapAid</span>
+                <Link href="/" >
+                  <span className="font-bold text-purple-900">SnapAid</span>
+                </Link>
               </div>
               <div className="flex items-center gap-4">
 
