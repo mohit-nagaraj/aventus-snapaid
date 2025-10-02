@@ -112,10 +112,21 @@ const quizData = {
   },
 }
 
+interface Question {
+  id: number
+  question: string
+  options: string[]
+}
+
+interface Quiz {
+  title: string
+  questions: Question[]
+}
+
 type QuizParams = {
-  params: {
+  params: Promise<{
     type: string
-  }
+  }>
 }
 
 export default function QuizPage({ params }: QuizParams) {
@@ -127,11 +138,21 @@ export default function QuizPage({ params }: QuizParams) {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submissionResult, setSubmissionResult] = useState<string | null>(null)
   const [submissionError, setSubmissionError] = useState<string | null>(null)
+  const [quizType, setQuizType] = useState<string>("")
+  const [quiz, setQuiz] = useState<Quiz | null>(null)
 
-  const quizType = params.type
-  const quiz = quizData[quizType as keyof typeof quizData]
+  // Handle async params
+  useEffect(() => {
+    const getParams = async () => {
+      const resolvedParams = await params
+      setQuizType(resolvedParams.type)
+      setQuiz(quizData[resolvedParams.type as keyof typeof quizData])
+    }
+    getParams()
+  }, [params])
 
   useEffect(() => {
+    if (quiz === null) return // Still loading
     if (!quiz) router.push("/")
   }, [quiz, router])
 
@@ -187,7 +208,7 @@ export default function QuizPage({ params }: QuizParams) {
           quizType: quizType,
           responses: formattedResponses,
           metadata: {
-            quizTitle: quiz.title,
+            quizTitle: quiz?.title,
             completedAt: new Date().toISOString(),
           },
         }),
@@ -208,7 +229,17 @@ export default function QuizPage({ params }: QuizParams) {
     }
   }
 
-  const progress = ((currentQuestion + 1) / quiz.questions.length) * 100
+  const progress = quiz ? ((currentQuestion + 1) / quiz.questions.length) * 100 : 0
+
+  if (quiz === null) {
+    return (
+      <div className="container mx-auto py-12 px-4 max-w-2xl">
+        <div className="flex justify-center items-center py-12">
+          <Spinner />
+        </div>
+      </div>
+    )
+  }
 
   if (!quiz) return null
 
