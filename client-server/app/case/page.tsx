@@ -397,7 +397,7 @@ import { useSearchParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { Separator } from "@/components/ui/separator"
-import { ArrowLeft, FileText, Send, Loader2 } from "lucide-react"
+import { FileText, Send, Loader2 } from "lucide-react"
 import Link from "next/link"
 
 type Message = {

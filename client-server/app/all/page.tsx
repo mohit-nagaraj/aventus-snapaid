@@ -12,7 +12,7 @@ export default function CasesPage() {
   const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedStatus, setSelectedStatus] = useState<"all" | "Opened" | "Verified" | "Triaged" | "Treating" | "Resolved" | "Closed">("all");
-  const [selectedRisk, setSelectedRisk] = useState<"all" | "immediate" | "critical" | "emergency" | "delayed" | "minor" | "stable" | "chronic" | "expectant">("all");
+  const [selectedRisk] = useState<"all" | "immediate" | "critical" | "emergency" | "delayed" | "minor" | "stable" | "chronic" | "expectant">("all");
 
 
   useEffect(() => {
@@ -43,7 +43,7 @@ const filteredCases = useMemo(() => {
       selectedStatus === 'all' || c.status === selectedStatus;
     // Use optional chaining and fallback to 'all' if risk is missing
     const matchesRisk =
-      selectedRisk === 'all' || (c as any).risk === selectedRisk;
+      selectedRisk === 'all' || c.risk === selectedRisk;
     const matchesQuery = c.input_text
       .toLowerCase()
       .includes(searchQuery.toLowerCase());

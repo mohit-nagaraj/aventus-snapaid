@@ -24,6 +24,8 @@ export interface Case {
   input_image: string | null;
   input_voice: string | null;
   conversation_history?: Message[];
+  // Risk category assigned during triage, if available
+  risk?: "immediate" | "critical" | "emergency" | "delayed" | "minor" | "stable" | "chronic" | "expectant";
 }
 
 export interface Message {
